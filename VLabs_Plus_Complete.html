@@ -1,0 +1,3934 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>V-Labs+ | Virtual Science Laboratories</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;900&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ══ RESET & VARIABLES ═══════════════════════════════════════════════════════ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --bg: #080C18;
+      --bg2: #0D1225;
+      --bg3: #121830;
+      --surface: #161D35;
+      --surface2: #1E2640;
+      --border: rgba(255, 255, 255, 0.07);
+      --border2: rgba(255, 255, 255, 0.13);
+      --teal: #00BFA5;
+      --teal2: #00D4BB;
+      --amber: #FFB300;
+      --violet: #7C6FFF;
+      --coral: #FF6B6B;
+      --green: #4CAF7D;
+      --text: #E8EEF8;
+      --text2: #8A97B4;
+      --text3: #4A567A;
+      --glow: rgba(0, 191, 165, 0.12);
+      --r: 12px;
+      --r2: 20px;
+      --font: 'DM Sans', sans-serif;
+      --mono: 'DM Mono', monospace;
+      --display: 'Playfair Display', serif;
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit
+    }
+
+    button {
+      font-family: var(--font);
+      cursor: pointer;
+      border: none;
+      outline: none
+    }
+
+    input,
+    select {
+      font-family: var(--font)
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg2)
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--surface2);
+      border-radius: 3px
+    }
+
+    /* ══ PARTICLES ═══════════════════════════════════════════════════════════════ */
+    #particles-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      animation: float-up linear infinite;
+      opacity: 0
+    }
+
+    @keyframes float-up {
+      0% {
+        transform: translateY(0) scale(0);
+        opacity: 0
+      }
+
+      10% {
+        opacity: 1
+      }
+
+      90% {
+        opacity: .3
+      }
+
+      100% {
+        transform: translateY(-100vh) scale(1.5);
+        opacity: 0
+      }
+    }
+
+    /* ══ NAV ════════════════════════════════════════════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(8, 12, 24, 0.88);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      cursor: pointer
+    }
+
+    .nav-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--teal), var(--violet));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: .25rem
+    }
+
+    .nav-link {
+      padding: .45rem 1rem;
+      border-radius: 8px;
+      font-size: .875rem;
+      font-weight: 500;
+      color: var(--text2);
+      transition: all .2s;
+      cursor: pointer
+    }
+
+    .nav-link:hover {
+      color: var(--text);
+      background: var(--surface)
+    }
+
+    .nav-link.active {
+      color: var(--teal);
+      background: var(--glow)
+    }
+
+    .nav-cta {
+      padding: .45rem 1.2rem;
+      border-radius: 8px;
+      background: var(--teal);
+      color: #000;
+      font-weight: 600;
+      font-size: .875rem;
+      transition: all .2s;
+      cursor: pointer
+    }
+
+    .nav-cta:hover {
+      background: var(--teal2);
+      transform: translateY(-1px)
+    }
+
+    .nav-user {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      font-size: .85rem;
+      color: var(--text2)
+    }
+
+    .nav-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), var(--violet));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .75rem;
+      font-weight: 700;
+      color: #000
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all .3s
+    }
+
+    /* ══ PAGES ══════════════════════════════════════════════════════════════════ */
+    .page {
+      display: none;
+      min-height: 100vh;
+      padding-top: 64px;
+      position: relative;
+      z-index: 1;
+      animation: pagein .35s ease
+    }
+
+    .page.active {
+      display: block
+    }
+
+    @keyframes pagein {
+      from {
+        opacity: 0;
+        transform: translateY(10px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    /* ══ BUTTONS ════════════════════════════════════════════════════════════════ */
+    .btn-primary {
+      padding: .85rem 2rem;
+      border-radius: 10px;
+      background: var(--teal);
+      color: #000;
+      font-weight: 600;
+      font-size: .95rem;
+      transition: all .25s;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .btn-primary:hover {
+      background: var(--teal2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 191, 165, .35)
+    }
+
+    .btn-outline {
+      padding: .85rem 2rem;
+      border-radius: 10px;
+      border: 1px solid var(--border2);
+      color: var(--text);
+      font-weight: 500;
+      font-size: .95rem;
+      transition: all .25s;
+      background: transparent;
+      cursor: pointer
+    }
+
+    .btn-outline:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      background: var(--glow)
+    }
+
+    .btn-sm {
+      padding: .5rem 1.2rem;
+      border-radius: 8px;
+      font-size: .8rem;
+      font-weight: 600;
+      color: #000;
+      border: none;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .btn-sm:hover {
+      opacity: .85;
+      transform: translateY(-1px)
+    }
+
+    /* ══ HOME ═══════════════════════════════════════════════════════════════════ */
+    .hero {
+      min-height: calc(100vh - 64px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0, 191, 165, .08) 0%, transparent 70%);
+      pointer-events: none
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: .35rem 1rem;
+      border-radius: 100px;
+      border: 1px solid rgba(0, 191, 165, .3);
+      background: rgba(0, 191, 165, .06);
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 1.5rem
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: blink 2s ease-in-out infinite
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .3
+      }
+    }
+
+    .hero h1 {
+      font-family: var(--display);
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #fff 40%, var(--teal) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      font-size: 1.125rem;
+      color: var(--text2);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+      font-weight: 300
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 2.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 4rem
+    }
+
+    .stat-num {
+      font-family: var(--display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--teal);
+      display: block
+    }
+
+    .stat-label {
+      font-size: .8rem;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: .06em
+    }
+
+    .section {
+      padding: 4rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto
+    }
+
+    .section-label {
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: .75rem
+    }
+
+    .section-title {
+      font-family: var(--display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1rem
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--r2);
+      overflow: hidden;
+      margin-top: 3rem
+    }
+
+    .feature-card {
+      background: var(--bg2);
+      padding: 2rem;
+      transition: background .2s;
+      position: relative;
+      overflow: hidden
+    }
+
+    .feature-card:hover {
+      background: var(--bg3)
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--teal), var(--violet));
+      opacity: 0;
+      transition: opacity .3s
+    }
+
+    .feature-card:hover::before {
+      opacity: 1
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem
+    }
+
+    .fi-teal {
+      background: rgba(0, 191, 165, .12)
+    }
+
+    .fi-amber {
+      background: rgba(255, 179, 0, .12)
+    }
+
+    .fi-violet {
+      background: rgba(124, 111, 255, .12)
+    }
+
+    .fi-coral {
+      background: rgba(255, 107, 107, .12)
+    }
+
+    .fi-green {
+      background: rgba(76, 175, 125, .12)
+    }
+
+    .feature-card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: .5rem
+    }
+
+    .feature-card p {
+      font-size: .875rem;
+      color: var(--text2);
+      line-height: 1.65
+    }
+
+    .subjects-teaser {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-top: 2.5rem
+    }
+
+    .subj-pill {
+      padding: 1.2rem 1rem;
+      border-radius: var(--r);
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .subj-pill:hover {
+      border-color: var(--teal);
+      background: var(--glow);
+      transform: translateY(-3px)
+    }
+
+    .subj-pill .icon {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: .5rem
+    }
+
+    .subj-pill .name {
+      font-size: .875rem;
+      font-weight: 600
+    }
+
+    .subj-pill .count {
+      font-size: .75rem;
+      color: var(--text3);
+      margin-top: .2rem
+    }
+
+    /* ══ SUBJECTS PAGE ══════════════════════════════════════════════════════════ */
+    .subjects-hero {
+      padding: 4rem 2rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto
+    }
+
+    .subjects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      padding: 0 2rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto
+    }
+
+    .subject-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--r2);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all .3s;
+      position: relative
+    }
+
+    .subject-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, .4)
+    }
+
+    .subject-card:hover {
+      border-color: var(--card-accent, var(--teal))
+    }
+
+    .subject-card-header {
+      padding: 2rem;
+      background: var(--card-bg, var(--bg3));
+      position: relative;
+      overflow: hidden
+    }
+
+    .subject-card-header::after {
+      content: '';
+      position: absolute;
+      bottom: -30px;
+      right: -30px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--card-accent, var(--teal));
+      opacity: .08
+    }
+
+    .subj-icon-lg {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 1rem
+    }
+
+    .subject-card-header h2 {
+      font-family: var(--display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: .3rem
+    }
+
+    .subject-card-header p {
+      font-size: .85rem;
+      color: var(--text2)
+    }
+
+    .subject-card-body {
+      padding: 1.25rem 2rem 1.5rem
+    }
+
+    .labs-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem
+    }
+
+    .labs-list li {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      font-size: .875rem;
+      color: var(--text2);
+      cursor: pointer;
+      padding: .3rem .5rem;
+      border-radius: 6px;
+      transition: all .15s
+    }
+
+    .labs-list li:hover {
+      color: var(--text);
+      background: var(--bg3)
+    }
+
+    .labs-list li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--card-accent, var(--teal));
+      flex-shrink: 0
+    }
+
+    .labs-list li.active-lab {
+      color: var(--text);
+      font-weight: 500
+    }
+
+    .subject-card-footer {
+      padding: 1rem 2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border)
+    }
+
+    .labs-count {
+      font-size: .75rem;
+      color: var(--text3)
+    }
+
+    /* ══ LOGIN / AUTH ═══════════════════════════════════════════════════════════ */
+    .auth-wrap {
+      min-height: calc(100vh - 64px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--r2);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden
+    }
+
+    .auth-card::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      height: 200px;
+      background: radial-gradient(ellipse, rgba(0, 191, 165, .1), transparent 70%);
+      pointer-events: none
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 2rem;
+      background: var(--bg3);
+      border-radius: 10px;
+      padding: 4px
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: .55rem;
+      border-radius: 7px;
+      font-size: .875rem;
+      font-weight: 500;
+      background: transparent;
+      color: var(--text2);
+      transition: all .2s;
+      cursor: pointer;
+      border: none;
+      text-align: center
+    }
+
+    .auth-tab.active {
+      background: var(--surface2);
+      color: var(--text)
+    }
+
+    .auth-title {
+      font-family: var(--display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: .4rem
+    }
+
+    .auth-sub {
+      font-size: .875rem;
+      color: var(--text2);
+      margin-bottom: 1.8rem
+    }
+
+    .field {
+      margin-bottom: 1.2rem
+    }
+
+    .field label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--text2);
+      margin-bottom: .45rem;
+      text-transform: uppercase;
+      letter-spacing: .04em
+    }
+
+    .field input {
+      width: 100%;
+      padding: .75rem 1rem;
+      border-radius: 8px;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      font-size: .9rem;
+      transition: border-color .2s
+    }
+
+    .field input:focus {
+      outline: none;
+      border-color: var(--teal)
+    }
+
+    .field input::placeholder {
+      color: var(--text3)
+    }
+
+    .btn-full {
+      width: 100%;
+      padding: .85rem;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--teal), #00A693);
+      color: #000;
+      font-weight: 700;
+      font-size: .95rem;
+      border: none;
+      cursor: pointer;
+      transition: all .25s;
+      margin-top: .5rem
+    }
+
+    .btn-full:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 25px rgba(0, 191, 165, .3)
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      color: var(--text3);
+      font-size: .8rem
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border)
+    }
+
+    .auth-message {
+      padding: .75rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: .85rem;
+      display: none
+    }
+
+    .auth-message.success {
+      background: rgba(76, 175, 125, .12);
+      border: 1px solid rgba(76, 175, 125, .3);
+      color: var(--green)
+    }
+
+    .auth-message.error {
+      background: rgba(255, 107, 107, .12);
+      border: 1px solid rgba(255, 107, 107, .3);
+      color: var(--coral)
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: .8rem;
+      color: var(--text3)
+    }
+
+    .auth-footer a {
+      color: var(--teal);
+      cursor: pointer
+    }
+
+    /* ══ LAB LAYOUT ═════════════════════════════════════════════════════════════ */
+    .lab-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: calc(100vh - 64px)
+    }
+
+    .lab-sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 1rem;
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+      overflow-y: auto
+    }
+
+    .sidebar-section {
+      margin-bottom: 2rem
+    }
+
+    .sidebar-label {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text3);
+      padding: 0 .5rem;
+      margin-bottom: .6rem
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .5rem .75rem;
+      border-radius: 8px;
+      font-size: .82rem;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all .15s
+    }
+
+    .sidebar-item:hover {
+      background: var(--bg3);
+      color: var(--text)
+    }
+
+    .sidebar-item.active {
+      background: var(--glow);
+      color: var(--teal);
+      font-weight: 600
+    }
+
+    .sidebar-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text3);
+      flex-shrink: 0
+    }
+
+    .sidebar-item.active .sidebar-dot {
+      background: var(--teal)
+    }
+
+    .lab-main {
+      padding: 2.5rem 2rem;
+      max-width: 900px
+    }
+
+    .lab-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .8rem;
+      color: var(--text3);
+      margin-bottom: 1.5rem
+    }
+
+    .lab-breadcrumb span {
+      cursor: pointer;
+      transition: color .2s
+    }
+
+    .lab-breadcrumb span:hover {
+      color: var(--teal)
+    }
+
+    .lab-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap
+    }
+
+    .lab-title h1 {
+      font-family: var(--display);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: .4rem
+    }
+
+    .lab-title p {
+      font-size: .9rem;
+      color: var(--text2)
+    }
+
+    .lab-badge {
+      padding: .3rem .8rem;
+      border-radius: 100px;
+      font-size: .72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      white-space: nowrap
+    }
+
+    .lab-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+      overflow-x: auto
+    }
+
+    .lab-tab-btn {
+      padding: .75rem 1.5rem;
+      font-size: .875rem;
+      font-weight: 500;
+      color: var(--text2);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+      margin-bottom: -1px
+    }
+
+    .lab-tab-btn:hover {
+      color: var(--text)
+    }
+
+    .lab-tab-btn.active {
+      color: var(--teal);
+      border-bottom-color: var(--teal)
+    }
+
+    .lab-tab-content {
+      display: none
+    }
+
+    .lab-tab-content.active {
+      display: block;
+      animation: pagein .3s ease
+    }
+
+    /* ══ LAB CONTENT ════════════════════════════════════════════════════════════ */
+    .theory-block {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--r);
+      padding: 1.75rem;
+      margin-bottom: 1.5rem
+    }
+
+    .theory-block h3 {
+      font-family: var(--display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem
+    }
+
+    .theory-block p {
+      font-size: .9rem;
+      color: var(--text2);
+      line-height: 1.75;
+      margin-bottom: .75rem
+    }
+
+    .theory-block p:last-child {
+      margin-bottom: 0
+    }
+
+    .formula-box {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: var(--amber);
+      display: flex;
+      align-items: center;
+      gap: .5rem
+    }
+
+    .formula-box::before {
+      content: '≡';
+      color: var(--text3);
+      font-size: .85rem
+    }
+
+    .var-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: .75rem;
+      margin-top: .75rem
+    }
+
+    .var-item {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      background: var(--bg3);
+      padding: .6rem .85rem;
+      border-radius: 8px;
+      font-size: .85rem
+    }
+
+    .var-sym {
+      font-family: var(--mono);
+      color: var(--teal);
+      font-weight: 500;
+      min-width: 28px
+    }
+
+    .var-desc {
+      color: var(--text2)
+    }
+
+    .steps-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem
+    }
+
+    .step-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.2rem 1.5rem
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), var(--violet));
+      color: #000;
+      font-weight: 700;
+      font-size: .8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0
+    }
+
+    .step-text {
+      font-size: .9rem;
+      color: var(--text2);
+      line-height: 1.6;
+      padding-top: .15rem
+    }
+
+    /* ══ SIMULATOR CARDS ════════════════════════════════════════════════════════ */
+    .sim-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--r2);
+      overflow: hidden;
+      margin-bottom: 1.5rem
+    }
+
+    .sim-header {
+      padding: 1.2rem 1.75rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: .75rem
+    }
+
+    .sim-header h3 {
+      font-size: 1rem;
+      font-weight: 600
+    }
+
+    .sim-live {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .7rem;
+      color: var(--green);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-left: auto
+    }
+
+    .sim-live::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 1.5s infinite
+    }
+
+    .sim-body {
+      padding: 1.75rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start
+    }
+
+    .sim-body.single {
+      grid-template-columns: 1fr
+    }
+
+    .sim-body.triple {
+      grid-template-columns: 1fr 1fr 1fr
+    }
+
+    .control-group {
+      margin-bottom: 1.4rem
+    }
+
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--text2);
+      margin-bottom: .6rem
+    }
+
+    .control-val {
+      font-family: var(--mono);
+      font-size: .85rem;
+      color: var(--amber);
+      font-weight: 500
+    }
+
+    input[type=range] {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      background: var(--bg3);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--teal);
+      cursor: pointer;
+      box-shadow: 0 0 0 3px rgba(0, 191, 165, .2);
+      transition: box-shadow .2s
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      box-shadow: 0 0 0 6px rgba(0, 191, 165, .2)
+    }
+
+    .sim-result-box {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: var(--r);
+      padding: 1.75rem;
+      text-align: center
+    }
+
+    .result-label {
+      font-size: .75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text3);
+      margin-bottom: .5rem
+    }
+
+    .result-value {
+      font-family: var(--display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--teal);
+      line-height: 1;
+      margin-bottom: .3rem
+    }
+
+    .result-unit {
+      font-size: .9rem;
+      color: var(--text2)
+    }
+
+    .result-formula {
+      font-family: var(--mono);
+      font-size: .78rem;
+      color: var(--text3);
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border)
+    }
+
+    .mini-bars {
+      display: flex;
+      flex-direction: column;
+      gap: .65rem;
+      margin-top: .75rem
+    }
+
+    .mini-bar-row {
+      display: flex;
+      flex-direction: column;
+      gap: 3px
+    }
+
+    .mini-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: .78rem;
+      color: var(--text2)
+    }
+
+    .mini-bar-track {
+      height: 5px;
+      background: var(--surface2);
+      border-radius: 3px;
+      overflow: hidden
+    }
+
+    .mini-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width .4s ease
+    }
+
+    .toggle-row {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem
+    }
+
+    .toggle-btn {
+      padding: .45rem 1rem;
+      border-radius: 8px;
+      font-size: .78rem;
+      font-weight: 600;
+      border: 1px solid var(--border2);
+      background: var(--bg3);
+      color: var(--text2);
+      cursor: pointer;
+      transition: all .18s
+    }
+
+    .toggle-btn.active,
+    .toggle-btn:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      background: var(--glow)
+    }
+
+    select.sim-select {
+      width: 100%;
+      padding: .65rem .9rem;
+      border-radius: 8px;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      font-size: .9rem;
+      cursor: pointer;
+      margin-bottom: 1rem
+    }
+
+    select.sim-select:focus {
+      outline: none;
+      border-color: var(--teal)
+    }
+
+    canvas {
+      display: block
+    }
+
+    /* ══ QUIZ ═══════════════════════════════════════════════════════════════════ */
+    .quiz-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--r2);
+      padding: 2rem;
+      margin-bottom: 1rem
+    }
+
+    .quiz-q-num {
+      font-family: var(--mono);
+      font-size: .75rem;
+      color: var(--teal);
+      font-weight: 500;
+      display: block;
+      margin-bottom: .35rem
+    }
+
+    .quiz-q {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      line-height: 1.5
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: .6rem
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .8rem 1.1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border2);
+      background: var(--bg3);
+      cursor: pointer;
+      transition: all .2s;
+      font-size: .9rem
+    }
+
+    .option:hover {
+      border-color: var(--teal);
+      background: var(--glow)
+    }
+
+    .option.correct {
+      border-color: var(--green);
+      background: rgba(76, 175, 125, .1);
+      color: var(--green);
+      pointer-events: none
+    }
+
+    .option.wrong {
+      border-color: var(--coral);
+      background: rgba(255, 107, 107, .1);
+      color: var(--coral);
+      pointer-events: none
+    }
+
+    .option.disabled {
+      pointer-events: none;
+      opacity: .6
+    }
+
+    .option-radio {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--border2);
+      flex-shrink: 0;
+      transition: all .2s
+    }
+
+    .option.correct .option-radio {
+      border-color: var(--green)
+    }
+
+    .option.wrong .option-radio {
+      border-color: var(--coral)
+    }
+
+    .quiz-feedback {
+      margin-top: .75rem;
+      padding: .9rem 1.1rem;
+      border-radius: 8px;
+      font-size: .85rem;
+      display: none;
+      line-height: 1.5
+    }
+
+    .quiz-btn {
+      margin-top: 1.5rem;
+      padding: .7rem 2rem;
+      border-radius: 8px;
+      background: var(--teal);
+      color: #000;
+      font-weight: 700;
+      font-size: .875rem;
+      border: none;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .quiz-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 15px rgba(0, 191, 165, .3)
+    }
+
+    .quiz-score {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--r2);
+      padding: 2.5rem;
+      text-align: center;
+      display: none
+    }
+
+    .score-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid var(--teal);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      background: rgba(0, 191, 165, .06)
+    }
+
+    .score-big {
+      font-family: var(--display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--teal);
+      line-height: 1
+    }
+
+    .score-denom {
+      font-size: .75rem;
+      color: var(--text3)
+    }
+
+    /* ══ DASHBOARD ══════════════════════════════════════════════════════════════ */
+    .dashboard-wrap {
+      padding: 2.5rem 2rem;
+      max-width: 1000px;
+      margin: 0 auto
+    }
+
+    .dash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem
+    }
+
+    .dash-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--r);
+      padding: 1.5rem
+    }
+
+    .dash-card-val {
+      font-family: var(--display);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: .25rem
+    }
+
+    .dash-card-label {
+      font-size: .8rem;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: .05em
+    }
+
+    .progress-bar-wrap {
+      margin-top: .75rem
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: var(--surface2);
+      border-radius: 2px;
+      overflow: hidden
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width .6s ease
+    }
+
+    .recent-list {
+      list-style: none
+    }
+
+    .recent-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .85rem 1rem;
+      border-radius: 8px;
+      background: var(--bg3);
+      margin-bottom: .5rem;
+      font-size: .875rem
+    }
+
+    .recent-lab {
+      color: var(--text);
+      font-weight: 500
+    }
+
+    .recent-score {
+      font-family: var(--mono);
+      font-weight: 700
+    }
+
+    /* ══ ABOUT ══════════════════════════════════════════════════════════════════ */
+    .about-hero {
+      padding: 5rem 2rem 3rem;
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center
+    }
+
+    .about-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 3rem
+    }
+
+    .about-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--r2);
+      padding: 2rem
+    }
+
+    .about-card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: .75rem
+    }
+
+    .about-card p {
+      font-size: .875rem;
+      color: var(--text2);
+      line-height: 1.7
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem
+    }
+
+    .team-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--r);
+      padding: 1.5rem;
+      text-align: center
+    }
+
+    .team-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #000
+    }
+
+    .team-card h4 {
+      font-size: .9rem;
+      font-weight: 600;
+      margin-bottom: .3rem
+    }
+
+    .team-card p {
+      font-size: .78rem;
+      color: var(--text3)
+    }
+
+    /* ══ PROGRESS BAR ═══════════════════════════════════════════════════════════ */
+    .lab-progress {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--border);
+      z-index: 50;
+      display: none
+    }
+
+    .lab-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), var(--violet));
+      transition: width .3s ease
+    }
+
+    /* ══ TOAST ══════════════════════════════════════════════════════════════════ */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      padding: .85rem 1.25rem;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      font-size: .875rem;
+      color: var(--text);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, .5);
+      transform: translateX(120%);
+      transition: transform .35s ease;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      max-width: 300px
+    }
+
+    .toast.show {
+      transform: translateX(0)
+    }
+
+    /* ══ FOOTER ═════════════════════════════════════════════════════════════════ */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      font-size: .8rem;
+      color: var(--text3)
+    }
+
+    footer span {
+      color: var(--teal)
+    }
+
+    /* ══ RESPONSIVE ═════════════════════════════════════════════════════════════ */
+    @media(max-width:900px) {
+      .lab-layout {
+        grid-template-columns: 1fr
+      }
+
+      .lab-sidebar {
+        display: none
+      }
+
+      .sim-body {
+        grid-template-columns: 1fr
+      }
+
+      .sim-body.triple {
+        grid-template-columns: 1fr
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr
+      }
+
+      nav {
+        padding: 0 1.25rem
+      }
+
+      .nav-links {
+        display: none
+      }
+
+      .hamburger {
+        display: flex
+      }
+    }
+
+    @media(max-width:480px) {
+      .subjects-grid {
+        grid-template-columns: 1fr;
+        padding: 0 1rem 3rem
+      }
+
+      .hero h1 {
+        font-size: 2.5rem
+      }
+
+      .auth-card {
+        padding: 1.75rem
+      }
+
+      .lab-main {
+        padding: 1.5rem 1rem
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="particles-bg"></div>
+
+  <nav id="main-nav">
+    <div class="nav-logo" onclick="goPage('home')">
+      <div class="nav-logo-icon">⚗</div>V-Labs+
+    </div>
+    <div class="nav-links" id="nav-links">
+      <span class="nav-link active" data-page="home" onclick="goPage('home')">Home</span>
+      <span class="nav-link" data-page="subjects" onclick="goPage('subjects')">Subjects</span>
+      <span class="nav-link" data-page="dashboard" onclick="goPage('dashboard')">Progress</span>
+      <span class="nav-link" data-page="about" onclick="goPage('about')">About</span>
+      <span id="nav-auth-btn" class="nav-cta" onclick="goPage('login')">Sign In</span>
+      <span id="nav-user-area" class="nav-user" style="display:none">
+        <div class="nav-avatar" id="nav-avatar">?</div>
+        <span id="nav-username"></span>
+        <span class="nav-link" onclick="doLogout()" style="font-size:.78rem;color:var(--coral)">Sign out</span>
+      </span>
+    </div>
+    <div class="hamburger" onclick="toggleMob()"><span></span><span></span><span></span></div>
+  </nav>
+
+  <div class="lab-progress" id="lab-progress">
+    <div class="lab-progress-fill" id="lpf"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     HOME
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page active" id="page-home">
+    <section class="hero">
+      <div>
+        <div class="hero-badge">NCERT Aligned · Class 9–12 · Free Forever</div>
+        <h1>Science Labs<br />Without Limits</h1>
+        <p>Perform 14 fully interactive virtual experiments across Physics, Chemistry, Biology, Maths and CS — no
+          equipment, no risk, no cost.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="goPage('subjects')">🔬 Explore Labs</button>
+          <button class="btn-outline" onclick="goPage('login')">Sign In Free</button>
+        </div>
+        <div class="stats-row">
+          <div class="stat"><span class="stat-num" data-count="14">0</span><span class="stat-label">Virtual Labs</span>
+          </div>
+          <div class="stat"><span class="stat-num" data-count="5">0</span><span class="stat-label">Subjects</span></div>
+          <div class="stat"><span class="stat-num" data-count="56">0</span><span class="stat-label">Quiz
+              Questions</span></div>
+          <div class="stat"><span class="stat-num" data-count="100">0</span><span class="stat-label">% Free</span></div>
+        </div>
+      </div>
+    </section>
+    <div class="section">
+      <div class="section-label">Why V-Labs+</div>
+      <h2 class="section-title">Everything you need to learn science better</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon fi-teal">🔬</div>
+          <h3>14 Interactive Simulators</h3>
+          <p>Every experiment has a fully working canvas/SVG simulation with real physics and chemistry models — not
+            just sliders on images.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon fi-amber">📚</div>
+          <h3>NCERT Curriculum</h3>
+          <p>Mapped to Class 9–12 syllabi. Theory, guided procedure, live simulation and 4-question quiz per lab.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon fi-violet">🏆</div>
+          <h3>Progress Tracking</h3>
+          <p>Sign in to track scores across all 14 labs, view your personal dashboard and compete on the leaderboard.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon fi-coral">🛡️</div>
+          <h3>Zero Risk</h3>
+          <p>No chemicals, no glassware, no lab fees. Perform titrations, electrolysis and DNA extraction from anywhere.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon fi-green">⚡</div>
+          <h3>Full REST API</h3>
+          <p>Express + MongoDB backend with JWT auth, quiz grading, simulation logging and leaderboards. Ready to
+            deploy.</p>
+        </div>
+      </div>
+    </div>
+    <div class="section" style="padding-top:0">
+      <div class="section-label">Subjects</div>
+      <h2 class="section-title">Jump straight in</h2>
+      <div class="subjects-teaser">
+        <div class="subj-pill" onclick="goPage('subjects')"><span class="icon">⚡</span>
+          <div class="name">Physics</div>
+          <div class="count">4 labs</div>
+        </div>
+        <div class="subj-pill" onclick="goPage('subjects')"><span class="icon">🧪</span>
+          <div class="name">Chemistry</div>
+          <div class="count">4 labs</div>
+        </div>
+        <div class="subj-pill" onclick="goPage('subjects')"><span class="icon">🌿</span>
+          <div class="name">Biology</div>
+          <div class="count">4 labs</div>
+        </div>
+        <div class="subj-pill" onclick="goPage('subjects')"><span class="icon">📐</span>
+          <div class="name">Mathematics</div>
+          <div class="count">1 lab</div>
+        </div>
+        <div class="subj-pill" onclick="goPage('subjects')"><span class="icon">💻</span>
+          <div class="name">Computer Sci.</div>
+          <div class="count">1 lab</div>
+        </div>
+      </div>
+    </div>
+    <footer>© 2026 V-Labs+ · Made for Indian students · <span>Open Education Initiative</span></footer>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     SUBJECTS
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-subjects">
+    <div class="subjects-hero">
+      <div class="section-label">All Experiments</div>
+      <h1 class="section-title">Explore Subjects</h1>
+      <p style="color:var(--text2);font-size:1rem;line-height:1.7">Click any lab to open the full experiment — theory,
+        procedure, live simulator and quiz.</p>
+    </div>
+    <div class="subjects-grid">
+      <div class="subject-card" style="--card-accent:#7C6FFF;--card-bg:rgba(124,111,255,.05)">
+        <div class="subject-card-header"><span class="subj-icon-lg">⚡</span>
+          <h2>Physics</h2>
+          <p>Mechanics, Electricity, Optics & Oscillations</p>
+        </div>
+        <div class="subject-card-body">
+          <ul class="labs-list">
+            <li class="active-lab" onclick="goLab('ohm')">Ohm's Law</li>
+            <li onclick="goLab('hooke')">Hooke's Law</li>
+            <li onclick="goLab('pendulum')">Simple Pendulum</li>
+            <li onclick="goLab('refraction')">Refraction of Light</li>
+          </ul>
+        </div>
+        <div class="subject-card-footer"><span class="labs-count">4 experiments</span><button class="btn-sm"
+            style="background:#7C6FFF" onclick="goLab('ohm')">Open →</button></div>
+      </div>
+      <div class="subject-card" style="--card-accent:#00BFA5;--card-bg:rgba(0,191,165,.05)">
+        <div class="subject-card-header"><span class="subj-icon-lg">🧪</span>
+          <h2>Chemistry</h2>
+          <p>Titration, Flame Tests & Electrochemistry</p>
+        </div>
+        <div class="subject-card-body">
+          <ul class="labs-list">
+            <li class="active-lab" onclick="goLab('titration')">Acid–Base Titration</li>
+            <li onclick="goLab('flame')">Flame Test</li>
+            <li onclick="goLab('electrolysis')">Electrolysis of Water</li>
+            <li onclick="goLab('salt')">Salt Analysis</li>
+          </ul>
+        </div>
+        <div class="subject-card-footer"><span class="labs-count">4 experiments</span><button class="btn-sm"
+            onclick="goLab('titration')">Open →</button></div>
+      </div>
+      <div class="subject-card" style="--card-accent:#4CAF7D;--card-bg:rgba(76,175,125,.05)">
+        <div class="subject-card-header"><span class="subj-icon-lg">🌿</span>
+          <h2>Biology</h2>
+          <p>Photosynthesis, Osmosis, Mitosis & DNA</p>
+        </div>
+        <div class="subject-card-body">
+          <ul class="labs-list">
+            <li class="active-lab" onclick="goLab('photo')">Photosynthesis Rate</li>
+            <li onclick="goLab('osmosis')">Osmosis in Plant Cells</li>
+            <li onclick="goLab('mitosis')">Stages of Mitosis</li>
+            <li onclick="goLab('dna')">DNA Extraction</li>
+          </ul>
+        </div>
+        <div class="subject-card-footer"><span class="labs-count">4 experiments</span><button class="btn-sm"
+            style="background:#4CAF7D" onclick="goLab('photo')">Open →</button></div>
+      </div>
+      <div class="subject-card" style="--card-accent:#FFB300;--card-bg:rgba(255,179,0,.05)">
+        <div class="subject-card-header"><span class="subj-icon-lg">📐</span>
+          <h2>Mathematics</h2>
+          <p>Calculus & Derivatives Visualiser</p>
+        </div>
+        <div class="subject-card-body">
+          <ul class="labs-list">
+            <li class="active-lab" onclick="goLab('derivatives')">Derivatives & Tangent Lines</li>
+          </ul>
+        </div>
+        <div class="subject-card-footer"><span class="labs-count">1 experiment</span><button class="btn-sm"
+            style="background:#FFB300" onclick="goLab('derivatives')">Open →</button></div>
+      </div>
+      <div class="subject-card" style="--card-accent:#FF6B6B;--card-bg:rgba(255,107,107,.05)">
+        <div class="subject-card-header"><span class="subj-icon-lg">💻</span>
+          <h2>Computer Science</h2>
+          <p>Digital Logic & Boolean Algebra</p>
+        </div>
+        <div class="subject-card-body">
+          <ul class="labs-list">
+            <li class="active-lab" onclick="goLab('logic')">Logic Gates Simulator</li>
+          </ul>
+        </div>
+        <div class="subject-card-footer"><span class="labs-count">1 experiment</span><button class="btn-sm"
+            style="background:#FF6B6B" onclick="goLab('logic')">Open →</button></div>
+      </div>
+    </div>
+    <footer>© 2026 V-Labs+ · <span>Inspired by OLabs</span></footer>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     LOGIN
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-login">
+    <div class="auth-wrap">
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <button class="auth-tab active" onclick="switchAuth('login',this)">Sign In</button>
+          <button class="auth-tab" onclick="switchAuth('register',this)">Register</button>
+        </div>
+        <div id="auth-msg" class="auth-message"></div>
+        <div id="auth-login">
+          <div class="auth-title">Welcome back</div>
+          <div class="auth-sub">Sign in to track your lab progress</div>
+          <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="student@school.in" />
+          </div>
+          <div class="field"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••" />
+          </div>
+          <button class="btn-full" onclick="doLogin()">Sign In</button>
+          <div class="auth-footer">No account? <a
+              onclick="switchAuth('register',document.querySelectorAll('.auth-tab')[1])">Register →</a></div>
+        </div>
+        <div id="auth-register" style="display:none">
+          <div class="auth-title">Create account</div>
+          <div class="auth-sub">Join V-Labs+ to track your experiments</div>
+          <div class="field"><label>Full Name</label><input type="text" id="reg-name" placeholder="Your full name" />
+          </div>
+          <div class="field"><label>Email</label><input type="email" id="reg-email" placeholder="student@school.in" />
+          </div>
+          <div class="field"><label>Password</label><input type="password" id="reg-pass"
+              placeholder="Min. 8 characters" /></div>
+          <div class="field"><label>Class</label><input type="text" id="reg-class"
+              placeholder="e.g. Class 11 - Science" /></div>
+          <button class="btn-full" onclick="doRegister()">Create Account</button>
+          <div class="auth-footer">Have an account? <a
+              onclick="switchAuth('login',document.querySelectorAll('.auth-tab')[0])">Sign In →</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     DASHBOARD
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-dashboard">
+    <div class="dashboard-wrap">
+      <div class="section-label">My Progress</div>
+      <h1 class="section-title" style="font-size:1.8rem;margin-bottom:1.5rem" id="dash-greeting">Dashboard</h1>
+      <div class="dash-grid" id="dash-stats">
+        <div class="dash-card">
+          <div class="dash-card-val" style="color:var(--teal)" id="dash-labs">—</div>
+          <div class="dash-card-label">Labs Completed</div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar">
+              <div class="progress-fill" id="dash-labs-bar" style="width:0%;background:var(--teal)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-val" style="color:var(--amber)" id="dash-avg">—</div>
+          <div class="dash-card-label">Avg Quiz Score</div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar">
+              <div class="progress-fill" id="dash-avg-bar" style="width:0%;background:var(--amber)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-val" style="color:var(--violet)" id="dash-total">—</div>
+          <div class="dash-card-label">Total Score Points</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-val" style="color:var(--green)" id="dash-sims">—</div>
+          <div class="dash-card-label">Simulation Runs</div>
+        </div>
+      </div>
+      <h3 style="font-size:1rem;font-weight:600;margin-bottom:1rem;color:var(--text2)">Recent Quiz Attempts</h3>
+      <ul class="recent-list" id="dash-recent">
+        <li class="recent-item"><span class="recent-lab">Sign in to see your progress</span></li>
+      </ul>
+      <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap">
+        <button class="btn-primary" onclick="goPage('subjects')">🔬 Continue Labs</button>
+        <button class="btn-outline" onclick="loadLeaderboard()">🏆 Leaderboard</button>
+      </div>
+      <div id="leaderboard-wrap" style="display:none;margin-top:2rem">
+        <h3 style="font-size:1rem;font-weight:600;margin-bottom:1rem;color:var(--text2)">🏆 Top Students</h3>
+        <ul class="recent-list" id="leaderboard-list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     14 LAB PAGES — generated dynamically by JS
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div id="lab-pages-container"></div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════════
+     ABOUT
+══════════════════════════════════════════════════════════════════════════════ -->
+  <div class="page" id="page-about">
+    <div class="about-hero">
+      <div class="section-label">About V-Labs+</div>
+      <h1 class="section-title">Open science education for every student</h1>
+      <p style="color:var(--text2);font-size:1rem;line-height:1.7;margin-top:1rem">V-Labs+ is a free virtual laboratory
+        platform built for Indian school students, providing 14 safe and interactive science experiments aligned with
+        the NCERT curriculum, backed by a full REST API.</p>
+    </div>
+    <div class="about-content">
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="feature-icon fi-teal" style="margin-bottom:1rem">🎯</div>
+          <h3>Our Mission</h3>
+          <p>Democratise practical science education in India — every student, regardless of geography or resources,
+            gets access to high-quality virtual experiments.</p>
+        </div>
+        <div class="about-card">
+          <div class="feature-icon fi-violet" style="margin-bottom:1rem">⚙️</div>
+          <h3>Tech Stack</h3>
+          <p>Frontend: Vanilla HTML/CSS/JS with Canvas-based simulations. Backend: Node.js + Express + MongoDB with JWT
+            auth, Mongoose models, and full REST API.</p>
+        </div>
+        <div class="about-card">
+          <div class="feature-icon fi-amber" style="margin-bottom:1rem">📖</div>
+          <h3>NCERT Aligned</h3>
+          <p>All 14 labs mapped to Class 9–12 science + maths syllabi. Use V-Labs+ as a supplement to your school
+            practicals before board exams.</p>
+        </div>
+        <div class="about-card">
+          <div class="feature-icon fi-green" style="margin-bottom:1rem">🌐</div>
+          <h3>Open Source</h3>
+          <p>Inspired by the OLabs initiative. All frontend content is freely accessible without login. Backend code is
+            fully documented and deployable on any Node.js host.</p>
+        </div>
+      </div>
+      <div style="margin-top:3rem">
+        <h2 class="section-title" style="font-size:1.5rem">The Team</h2>
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-avatar" style="background:linear-gradient(135deg,var(--teal),var(--violet))">SR</div>
+            <h4>Sam Rozario D</h4>
+            <p>24BCE1196 · VIT Chennai</p>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar" style="background:linear-gradient(135deg,var(--amber),var(--coral))">VP</div>
+            <h4>Venkatramanan P</h4>
+            <p>24BCE1808 · VIT Chennai</p>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar" style="background:linear-gradient(135deg,var(--violet),var(--coral))">📚</div>
+            <h4>Web Programming</h4>
+            <p>Course Project · 2026</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer>© 2026 V-Labs+ · <span>Open Education</span></footer>
+  </div>
+
+  <div class="toast" id="toast"><span id="toast-msg"></span></div>
+
+  <script>
+    /* ═══════════════════════════════════════════════════════════════════════════
+       CONFIGURATION
+    ═══════════════════════════════════════════════════════════════════════════ */
+    const API_BASE = 'http://localhost:5001/api'; // change to your deployed URL
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       STATE
+    ═══════════════════════════════════════════════════════════════════════════ */
+    let currentUser = null;
+    let currentToken = null;
+    let quizState = {};   // { labId: { answers: [], submitted: false } }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       API HELPERS
+    ═══════════════════════════════════════════════════════════════════════════ */
+    async function apiCall(method, path, body = null) {
+      const headers = { 'Content-Type': 'application/json' };
+      if (currentToken) headers['Authorization'] = 'Bearer ' + currentToken;
+      try {
+        const res = await fetch(API_BASE + path, {
+          method, headers,
+          body: body ? JSON.stringify(body) : undefined
+        });
+        return await res.json();
+      } catch (e) {
+        return { success: false, message: 'Cannot reach server. Running in offline mode.' };
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       AUTH
+    ═══════════════════════════════════════════════════════════════════════════ */
+    function loadStoredAuth() {
+      const t = localStorage.getItem('vlabs_token');
+      const u = localStorage.getItem('vlabs_user');
+      if (t && u) { currentToken = t; currentUser = JSON.parse(u); updateNavAuth(); }
+    }
+    function updateNavAuth() {
+      const btnEl = document.getElementById('nav-auth-btn');
+      const userEl = document.getElementById('nav-user-area');
+      if (currentUser) {
+        btnEl.style.display = 'none';
+        userEl.style.display = 'flex';
+        document.getElementById('nav-username').textContent = currentUser.name.split(' ')[0];
+        document.getElementById('nav-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
+      } else {
+        btnEl.style.display = '';
+        userEl.style.display = 'none';
+      }
+    }
+    function showAuthMsg(type, msg) {
+      const el = document.getElementById('auth-msg');
+      el.className = 'auth-message ' + type;
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+    function switchAuth(mode, btn) {
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('auth-login').style.display = mode === 'login' ? 'block' : 'none';
+      document.getElementById('auth-register').style.display = mode === 'register' ? 'block' : 'none';
+      document.getElementById('auth-msg').style.display = 'none';
+    }
+    async function doLogin() {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-pass').value;
+      if (!email || !password) return showAuthMsg('error', 'Please fill in all fields.');
+      showAuthMsg('success', 'Signing in…');
+      const data = await apiCall('POST', '/auth/login', { email, password });
+      if (data.success) {
+        currentToken = data.token; currentUser = data.user;
+        localStorage.setItem('vlabs_token', currentToken);
+        localStorage.setItem('vlabs_user', JSON.stringify(currentUser));
+        updateNavAuth();
+        notify('👋 Welcome back, ' + currentUser.name.split(' ')[0] + '!');
+        goPage('home');
+      } else {
+        showAuthMsg('error', data.message || 'Login failed.');
+      }
+    }
+    async function doRegister() {
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-pass').value;
+      const schoolClass = document.getElementById('reg-class').value.trim();
+      if (!name || !email || !password) return showAuthMsg('error', 'Please fill in all fields.');
+      if (password.length < 8) return showAuthMsg('error', 'Password must be at least 8 characters.');
+      showAuthMsg('success', 'Creating account…');
+      const data = await apiCall('POST', '/auth/register', { name, email, password, schoolClass });
+      if (data.success) {
+        currentToken = data.token; currentUser = data.user;
+        localStorage.setItem('vlabs_token', currentToken);
+        localStorage.setItem('vlabs_user', JSON.stringify(currentUser));
+        updateNavAuth();
+        notify('🎉 Account created! Welcome, ' + currentUser.name.split(' ')[0]);
+        goPage('home');
+      } else {
+        showAuthMsg('error', data.message || 'Registration failed.');
+      }
+    }
+    function doLogout() {
+      currentToken = null; currentUser = null;
+      localStorage.removeItem('vlabs_token');
+      localStorage.removeItem('vlabs_user');
+      updateNavAuth();
+      notify('Signed out.');
+      goPage('home');
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       DASHBOARD
+    ═══════════════════════════════════════════════════════════════════════════ */
+    async function loadDashboard() {
+      if (!currentUser) {
+        document.getElementById('dash-greeting').textContent = 'Sign in to track progress';
+        return;
+      }
+      document.getElementById('dash-greeting').textContent = 'Hi, ' + currentUser.name.split(' ')[0] + ' 👋';
+      const data = await apiCall('GET', '/progress/dashboard');
+      if (data.success) {
+        const d = data.dashboard;
+        document.getElementById('dash-labs').textContent = d.totalLabsCompleted;
+        document.getElementById('dash-avg').textContent = d.avgScore + '%';
+        document.getElementById('dash-total').textContent = d.totalQuizScore;
+        document.getElementById('dash-sims').textContent = d.simulationRuns;
+        document.getElementById('dash-labs-bar').style.width = Math.min(100, d.totalLabsCompleted / 14 * 100) + '%';
+        document.getElementById('dash-avg-bar').style.width = d.avgScore + '%';
+        const recentEl = document.getElementById('dash-recent');
+        if (d.recentAttempts && d.recentAttempts.length) {
+          recentEl.innerHTML = d.recentAttempts.map(a => `
+        <li class="recent-item">
+          <span class="recent-lab">${a.lab?.title || a.labId}</span>
+          <span class="recent-score" style="color:${a.score >= 60 ? 'var(--green)' : 'var(--coral)'}">${a.score}%</span>
+        </li>`).join('');
+        } else {
+          recentEl.innerHTML = '<li class="recent-item"><span class="recent-lab" style="color:var(--text3)">No quiz attempts yet — complete a lab!</span></li>';
+        }
+      }
+    }
+    async function loadLeaderboard() {
+      const wrap = document.getElementById('leaderboard-wrap');
+      wrap.style.display = wrap.style.display === 'none' ? 'block' : 'none';
+      if (wrap.style.display === 'none') return;
+      const data = await apiCall('GET', '/progress/leaderboard');
+      const list = document.getElementById('leaderboard-list');
+      if (data.success && data.leaderboard.length) {
+        list.innerHTML = data.leaderboard.map((u, i) => `
+      <li class="recent-item">
+        <span class="recent-lab"><strong style="color:var(--amber)">#${i + 1}</strong>  ${u.name} <span style="color:var(--text3);font-size:.78rem">${u.schoolClass || ''}</span></span>
+        <span class="recent-score" style="color:var(--teal)">${u.totalQuizScore} pts</span>
+      </li>`).join('');
+      } else {
+        list.innerHTML = '<li class="recent-item"><span style="color:var(--text3)">No entries yet.</span></li>';
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       QUIZ ENGINE
+    ═══════════════════════════════════════════════════════════════════════════ */
+    function initQuiz(labId) {
+      if (!quizState[labId]) quizState[labId] = { answers: {}, submitted: false };
+    }
+    function handleAnswer(labId, qIdx, optIdx, isCorrect, btn) {
+      if (quizState[labId]?.submitted) return;
+      initQuiz(labId);
+      quizState[labId].answers[qIdx] = optIdx;
+      const opts = btn.parentElement.querySelectorAll('.option');
+      opts.forEach(o => o.classList.add('disabled'));
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      if (!isCorrect) opts.forEach((o, i) => { if (i === +btn.dataset.correct) o.classList.add('correct'); });
+      const fb = document.getElementById(`qfb-${labId}-${qIdx}`);
+      if (fb) fb.style.display = 'block';
+    }
+    async function submitQuiz(labId, totalQ, questions) {
+      if (quizState[labId]?.submitted) return;
+      quizState[labId].submitted = true;
+      const answers = Object.entries(quizState[labId].answers).map(([qi, si]) => ({
+        questionIndex: +qi, selectedIndex: si
+      }));
+      const correct = questions.filter((q, i) => quizState[labId].answers[i] === q.correct).length;
+      const score = Math.round(correct / totalQ * 100);
+      // Show score UI
+      const qEl = document.getElementById(`quiz-${labId}-questions`);
+      const sEl = document.getElementById(`quiz-${labId}-score`);
+      if (qEl) qEl.style.display = 'none';
+      if (sEl) {
+        sEl.style.display = 'block';
+        sEl.querySelector('.score-big').textContent = correct;
+        const passed = score >= 75;
+        const msgs = ['Review the theory section and try again! 📖', 'Good progress! Check the questions you missed. 💪', 'Great work! Almost perfect! ⭐', 'Outstanding! Perfect score! 🎉'];
+        const msgEl = sEl.querySelector('.score-msg');
+        if (msgEl) msgEl.textContent = msgs[Math.min(3, Math.floor(correct / totalQ * 3.9))];
+      }
+      notify(`Quiz done! Score: ${correct}/${totalQ}`);
+      // Submit to backend if logged in
+      if (currentToken) {
+        await apiCall('POST', `/labs/${labId}/quiz`, { answers, timeSpent: 0 });
+      }
+      // Log simulation
+      apiCall('POST', `/labs/${labId}/simulate`, { inputs: {}, result: { quizScore: score }, sessionId: 'anon' });
+    }
+    function retryQuiz(labId) {
+      quizState[labId] = { answers: {}, submitted: false };
+      const qEl = document.getElementById(`quiz-${labId}-questions`);
+      const sEl = document.getElementById(`quiz-${labId}-score`);
+      if (qEl) qEl.style.display = 'block';
+      if (sEl) sEl.style.display = 'none';
+      document.querySelectorAll(`#quiz-${labId}-questions .option`).forEach(o => {
+        o.className = 'option'; o.style.pointerEvents = '';
+      });
+      document.querySelectorAll(`#quiz-${labId}-questions .quiz-feedback`).forEach(f => f.style.display = 'none');
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       LAB DATA — all 14 labs
+    ═══════════════════════════════════════════════════════════════════════════ */
+    const LABS = {
+
+      // ── PHYSICS ────────────────────────────────────────────────────────────────
+      ohm: {
+        id: 'physics-ohms-law', title: "Ohm's Law", subject: 'Physics',
+        badge: { bg: 'rgba(124,111,255,.15)', color: '#a79fff', border: 'rgba(124,111,255,.3)', icon: '⚡' },
+        desc: "Verify V = IR: the relationship between voltage, current and resistance.",
+        formula: 'V = I × R', vars: [{ s: 'V', d: 'Voltage (Volts)' }, { s: 'I', d: 'Current (Amperes)' }, { s: 'R', d: 'Resistance (Ω)' }],
+        theory: `Ohm's Law states that the current <strong>I</strong> through a conductor is directly proportional to the voltage <strong>V</strong> across it, provided temperature remains constant. The constant of proportionality is the resistance <strong>R</strong>.
+    <br/><br/>Resistors in <strong>series</strong>: R_total = R₁ + R₂. In <strong>parallel</strong>: 1/R_total = 1/R₁ + 1/R₂. The V-I graph is a straight line — steeper slope = higher resistance.`,
+        procedure: ["Set resistance R using the slider (start at 5 Ω).", "Increase voltage from 1 V to 12 V in steps of 2 V.", "Record current I = V/R at each step.", "Plot V vs I — verify the linear relationship. Slope = 1/R."],
+        quiz: [
+          { q: "If voltage doubles while resistance is constant, current:", opts: ["Doubles", "Halves", "Stays the same", "Becomes zero"], correct: 0, exp: "I = V/R. Doubling V doubles I (R fixed)." },
+          { q: "A 12 V battery across a 4 Ω resistor gives current:", opts: ["1 A", "2 A", "3 A", "4 A"], correct: 2, exp: "I = V/R = 12/4 = 3 A." },
+          { q: "The V-I graph for an ohmic resistor is:", opts: ["Straight line through origin", "Parabola", "Exponential", "Horizontal line"], correct: 0, exp: "V = IR is linear — straight line through the origin." },
+          { q: "SI unit of electrical resistance:", opts: ["Ampere", "Volt", "Ohm (Ω)", "Watt"], correct: 2, exp: "Resistance is measured in Ohms (Ω)." },
+        ],
+        sidebarItems: ["Ohm's Law", "Hooke's Law", "Simple Pendulum", "Refraction"],
+        sidebarLinks: ['ohm', 'hooke', 'pendulum', 'refraction'],
+      },
+
+      hooke: {
+        id: 'physics-hooks-law', title: "Hooke's Law", subject: 'Physics',
+        badge: { bg: 'rgba(124,111,255,.15)', color: '#a79fff', border: 'rgba(124,111,255,.3)', icon: '⚡' },
+        desc: "Study spring extension and verify F = kx within the elastic limit.",
+        formula: 'F = k × x', vars: [{ s: 'F', d: 'Force (Newtons)' }, { s: 'k', d: 'Spring constant (N/m)' }, { s: 'x', d: 'Extension (m)' }],
+        theory: `Hooke's Law states that the extension <strong>x</strong> of a spring is directly proportional to the applied force <strong>F</strong>, provided the elastic limit is not exceeded. The proportionality constant <strong>k</strong> is the spring constant — a measure of stiffness. A stiffer spring has a larger k value.`,
+        procedure: ["Hang a mass on the spring. Record extension x.", "Increase mass in steps. Calculate F = mg.", "Plot F (y-axis) vs x (x-axis). Find slope = k.", "Observe permanent deformation beyond elastic limit."],
+        quiz: [
+          { q: "Hooke's Law holds only within:", opts: ["Maximum length", "Elastic limit", "Breaking point", "Plastic region"], correct: 1, exp: "Beyond the elastic limit, permanent deformation occurs and Hooke's Law no longer applies." },
+          { q: "Slope of Force vs Extension graph equals:", opts: ["Mass", "Acceleration", "Spring constant k", "Velocity"], correct: 2, exp: "F = kx → slope = F/x = k." },
+          { q: "If k = 200 N/m and x = 0.05 m, force is:", opts: ["4000 N", "10 N", "4 N", "200 N"], correct: 1, exp: "F = kx = 200 × 0.05 = 10 N." },
+          { q: "A spring compressed by 3 cm with k = 500 N/m stores energy:", opts: ["0.225 J", "0.45 J", "15 J", "1.5 J"], correct: 0, exp: "PE = ½kx² = ½ × 500 × 0.03² = 0.225 J." },
+        ],
+        sidebarItems: ["Ohm's Law", "Hooke's Law", "Simple Pendulum", "Refraction"],
+        sidebarLinks: ['ohm', 'hooke', 'pendulum', 'refraction'],
+      },
+
+      pendulum: {
+        id: 'physics-simple-pendulum', title: 'Simple Pendulum', subject: 'Physics',
+        badge: { bg: 'rgba(124,111,255,.15)', color: '#a79fff', border: 'rgba(124,111,255,.3)', icon: '⚡' },
+        desc: "Measure time period T and verify T = 2π√(L/g).",
+        formula: 'T = 2π√(L/g)', vars: [{ s: 'T', d: 'Period (s)' }, { s: 'L', d: 'Length (m)' }, { s: 'g', d: '9.8 m/s²' }],
+        theory: `A simple pendulum consists of a mass (bob) hung on a string. For small angles (< 15°), the time period depends only on string length L and gravitational acceleration g. Mass and amplitude do NOT affect the period (for small angles). On the Moon (g = 1.6 m/s²), a pendulum swings much slower.`,
+        procedure: ["Set pendulum length L using the slider.", "Release from small angle (≤ 15°).", "Measure time for 20 oscillations, divide by 20 for T.", "Plot T² vs L — verify straight line. Slope = 4π²/g."],
+        quiz: [
+          { q: "Period of a pendulum depends on:", opts: ["Mass of bob", "Amplitude (small angle)", "Length", "Material of string"], correct: 2, exp: "T = 2π√(L/g) — only L and g matter (for small angles)." },
+          { q: "Quadrupling pendulum length multiplies T by:", opts: ["4", "2", "½", "¼"], correct: 1, exp: "T ∝ √L. Quadrupling L: T multiplied by √4 = 2." },
+          { q: "T² vs L graph is:", opts: ["Parabola", "Hyperbola", "Straight line", "Exponential"], correct: 2, exp: "T² = (4π²/g)L — linear in L, so T² vs L is a straight line." },
+          { q: "On the Moon (g = 1.6 m/s²) a pendulum:", opts: ["Swings faster", "Swings slower", "Stops swinging", "Swings same rate"], correct: 1, exp: "Lower g → larger T → pendulum swings more slowly." },
+        ],
+        sidebarItems: ["Ohm's Law", "Hooke's Law", "Simple Pendulum", "Refraction"],
+        sidebarLinks: ['ohm', 'hooke', 'pendulum', 'refraction'],
+      },
+
+      refraction: {
+        id: 'physics-refraction', title: 'Refraction of Light', subject: 'Physics',
+        badge: { bg: 'rgba(124,111,255,.15)', color: '#a79fff', border: 'rgba(124,111,255,.3)', icon: '⚡' },
+        desc: "Verify Snell's Law and determine the refractive index of glass.",
+        formula: 'n₁ sin θ₁ = n₂ sin θ₂', vars: [{ s: 'n₁', d: 'Air (= 1.0)' }, { s: 'n₂', d: 'Glass (≈ 1.5)' }, { s: 'θ₁', d: 'Angle of incidence' }, { s: 'θ₂', d: 'Angle of refraction' }],
+        theory: `Refraction occurs when light passes from one medium to another, changing speed and direction. Snell's Law: n₁ sin θ₁ = n₂ sin θ₂. Glass has a higher refractive index (≈ 1.5) than air (1.0), so light bends toward the normal when entering glass. Total internal reflection occurs when θ₁ exceeds the critical angle.`,
+        procedure: ["Set angle of incidence θ₁ using the slider.", "Observe the refracted ray inside the glass slab.", "Read angle of refraction θ₂.", "Calculate n = sin(θ₁)/sin(θ₂) — verify it is constant ≈ 1.5."],
+        quiz: [
+          { q: "Light entering glass from air:", opts: ["Speeds up", "Slows down", "Same speed", "Stops"], correct: 1, exp: "Glass has higher n — light slows down (v = c/n)." },
+          { q: "n = 1.5 for glass means light travels:", opts: ["1.5× faster in glass", "1.5× slower in glass", "Same speed", "At an angle"], correct: 1, exp: "n = c/v → v = c/1.5 (1.5× slower than in vacuum)." },
+          { q: "Total internal reflection requires:", opts: ["θᵢ < critical angle, rarer→denser", "θᵢ > critical angle, denser→rarer", "Any angle in glass", "Normal incidence"], correct: 1, exp: "TIR: angle > critical angle AND light moving from denser to rarer medium." },
+          { q: "Critical angle for glass (n=1.5) is approximately:", opts: ["90°", "41.8°", "30°", "60°"], correct: 1, exp: "sin(θc) = 1/n = 1/1.5 = 0.667 → θc ≈ 41.8°." },
+        ],
+        sidebarItems: ["Ohm's Law", "Hooke's Law", "Simple Pendulum", "Refraction"],
+        sidebarLinks: ['ohm', 'hooke', 'pendulum', 'refraction'],
+      },
+
+      // ── CHEMISTRY ───────────────────────────────────────────────────────────────
+      titration: {
+        id: 'chemistry-titration', title: 'Acid–Base Titration', subject: 'Chemistry',
+        badge: { bg: 'rgba(0,191,165,.1)', color: 'var(--teal)', border: 'rgba(0,191,165,.3)', icon: '🧪' },
+        desc: "Determine concentration of HCl using NaOH and phenolphthalein indicator.",
+        formula: 'HCl + NaOH → NaCl + H₂O', vars: [{ s: 'M₁V₁', d: 'Moles of acid' }, { s: 'M₂V₂', d: 'Moles of base' }, { s: 'pH 7', d: 'Equivalence point' }],
+        theory: `Titration is a volumetric analysis technique. A solution of known concentration (NaOH, the <strong>titrant</strong>) is added to a solution of unknown concentration (HCl, the <strong>analyte</strong>) until the reaction is complete. <strong>Phenolphthalein</strong> is colourless in acid and turns pink in base — the colour change marks the <em>end point</em>. At equivalence: M₁V₁ = M₂V₂.`,
+        procedure: ["Fill burette with NaOH. Note initial reading.", "Pipette 20 mL HCl into conical flask. Add 2–3 drops phenolphthalein.", "Add NaOH dropwise while swirling flask.", "Stop at first permanent pale-pink (end point). Record volume."],
+        quiz: [
+          { q: "pH of a neutral solution at 25°C:", opts: ["0", "7", "14", "1"], correct: 1, exp: "Neutral: [H⁺] = [OH⁻], pH = 7." },
+          { q: "Phenolphthalein turns pink in:", opts: ["Acidic solution", "Neutral", "Basic solution", "Pure water only"], correct: 2, exp: "Phenolphthalein: colourless below pH 8.2, pink above pH 8.2." },
+          { q: "At equivalence point of HCl + NaOH:", opts: ["pH < 7", "pH = 7", "pH > 7", "pH = 0"], correct: 1, exp: "NaCl + H₂O is neutral — pH = 7 at equivalence." },
+          { q: "25 mL of 0.1 M NaOH neutralises HCl. Moles of HCl:", opts: ["0.25", "0.025", "0.0025", "2.5"], correct: 2, exp: "n = MV = 0.1 × 0.025 = 0.0025 mol." },
+        ],
+        sidebarItems: ["Titration", "Flame Test", "Electrolysis", "Salt Analysis"],
+        sidebarLinks: ['titration', 'flame', 'electrolysis', 'salt'],
+      },
+
+      flame: {
+        id: 'chemistry-flame-test', title: 'Flame Test', subject: 'Chemistry',
+        badge: { bg: 'rgba(0,191,165,.1)', color: 'var(--teal)', border: 'rgba(0,191,165,.3)', icon: '🧪' },
+        desc: "Identify metal ions by the characteristic colour they produce in a flame.",
+        formula: 'Metal ion + heat energy → emission spectrum', vars: [{ s: 'Li⁺', d: 'Crimson red' }, { s: 'Na⁺', d: 'Intense yellow' }, { s: 'K⁺', d: 'Lilac/violet' }, { s: 'Cu²⁺', d: 'Blue-green' }, { s: 'Ca²⁺', d: 'Brick red' }],
+        theory: `When metal salts are heated in a flame, electrons are excited to higher energy levels. When they return to ground state, they emit photons at specific wavelengths — producing characteristic colours. This is the basis of emission spectroscopy.`,
+        procedure: ["Clean a nichrome wire with concentrated HCl.", "Dip wire in test compound solution.", "Hold in the hottest (blue) part of Bunsen flame.", "Record the colour. Use cobalt-blue glass to see K⁺ through Na⁺."],
+        quiz: [
+          { q: "Sodium (Na⁺) flame colour:", opts: ["Crimson", "Intense yellow", "Lilac", "Blue-green"], correct: 1, exp: "Na⁺ emits at 589 nm — intense persistent yellow flame." },
+          { q: "Potassium (K⁺) flame colour:", opts: ["Blue-green", "Crimson", "Lilac/violet", "Brick red"], correct: 2, exp: "K⁺ produces characteristic lilac/violet flame." },
+          { q: "Copper (Cu²⁺) flame colour:", opts: ["Yellow", "Crimson", "Brick red", "Blue-green"], correct: 3, exp: "Cu²⁺ gives a distinctive blue-green flame." },
+          { q: "Calcium (Ca²⁺) flame colour:", opts: ["Yellow", "Brick red", "Blue", "Violet"], correct: 1, exp: "Ca²⁺ produces brick red/orange-red flame." },
+        ],
+        sidebarItems: ["Titration", "Flame Test", "Electrolysis", "Salt Analysis"],
+        sidebarLinks: ['titration', 'flame', 'electrolysis', 'salt'],
+      },
+
+      electrolysis: {
+        id: 'chemistry-electrolysis', title: 'Electrolysis of Water', subject: 'Chemistry',
+        badge: { bg: 'rgba(0,191,165,.1)', color: 'var(--teal)', border: 'rgba(0,191,165,.3)', icon: '🧪' },
+        desc: "Decompose water into H₂ and O₂ using an electric current. Verify 2:1 volume ratio.",
+        formula: '2H₂O → 2H₂ + O₂', vars: [{ s: 'Cathode (−)', d: 'H₂ gas (reduction)' }, { s: 'Anode (+)', d: 'O₂ gas (oxidation)' }, { s: 'Electrolyte', d: 'Dilute H₂SO₄' }],
+        theory: `Electrolysis uses electrical energy to drive a non-spontaneous chemical reaction. In water electrolysis: at the <strong>cathode</strong> (−): 2H⁺ + 2e⁻ → H₂ (reduction). At the <strong>anode</strong> (+): 2H₂O → O₂ + 4H⁺ + 4e⁻ (oxidation). The volume ratio H₂:O₂ = 2:1, confirming the stoichiometry of water.`,
+        procedure: ["Set up Hoffmann voltameter with dilute H₂SO₄.", "Connect DC power supply and apply voltage.", "Collect gases at cathode and anode tubes.", "Measure volumes — verify H₂:O₂ = 2:1."],
+        quiz: [
+          { q: "Hydrogen is produced at the:", opts: ["Anode (+)", "Cathode (−)", "Both equally", "Neither"], correct: 1, exp: "Reduction at cathode: 2H⁺ + 2e⁻ → H₂." },
+          { q: "H₂ : O₂ volume ratio during water electrolysis:", opts: ["1:2", "2:1", "1:1", "3:1"], correct: 1, exp: "2H₂O → 2H₂ + O₂ — two moles H₂ per mole O₂." },
+          { q: "Dilute H₂SO₄ is added to water to:", opts: ["Change colour", "Increase conductivity", "Decrease boiling point", "Neutralise"], correct: 1, exp: "Pure water is a poor conductor. H₂SO₄ provides ions to carry current." },
+          { q: "At the anode during water electrolysis:", opts: ["H₂ is produced", "O₂ is produced", "Na is deposited", "Cl₂ is produced"], correct: 1, exp: "Oxidation at anode: 2H₂O → O₂ + 4H⁺ + 4e⁻." },
+        ],
+        sidebarItems: ["Titration", "Flame Test", "Electrolysis", "Salt Analysis"],
+        sidebarLinks: ['titration', 'flame', 'electrolysis', 'salt'],
+      },
+
+      salt: {
+        id: 'chemistry-salt-analysis', title: 'Salt Analysis', subject: 'Chemistry',
+        badge: { bg: 'rgba(0,191,165,.1)', color: 'var(--teal)', border: 'rgba(0,191,165,.3)', icon: '🧪' },
+        desc: "Identify cation and anion in an unknown salt using systematic qualitative tests.",
+        formula: 'Preliminary → Cation tests → Anion tests → Confirmatory', vars: [{ s: 'CO₃²⁻', d: 'CO₂ with HCl' }, { s: 'SO₄²⁻', d: 'White ppt. BaCl₂' }, { s: 'Cl⁻', d: 'White ppt. AgNO₃' }, { s: 'Fe³⁺', d: 'Blood-red NH₄SCN' }],
+        theory: `Qualitative salt analysis identifies unknown ions through a series of systematic tests. First, physical observations (colour, solubility). Then flame test for cations. Then anion tests: carbonates give CO₂ with HCl; sulphates give white BaSO₄ precipitate; chlorides give white AgCl precipitate soluble in NH₃.`,
+        procedure: ["Observe colour, odour and solubility (preliminary tests).", "Perform flame test for cation identification.", "Add dilute HCl — observe gas (carbonates).", "Add reagents for anion confirmation tests."],
+        quiz: [
+          { q: "White precipitate with BaCl₂ insoluble in HCl indicates:", opts: ["Carbonate", "Chloride", "Sulphate", "Nitrate"], correct: 2, exp: "Ba²⁺ + SO₄²⁻ → BaSO₄↓ (white, insoluble in HCl) — sulphate test." },
+          { q: "AgNO₃ white ppt. soluble in NH₃ indicates:", opts: ["SO₄²⁻", "CO₃²⁻", "Cl⁻", "NO₃⁻"], correct: 2, exp: "Ag⁺ + Cl⁻ → AgCl↓ (white). AgCl dissolves in NH₃ — confirms Cl⁻." },
+          { q: "Brown ring test confirms:", opts: ["Chloride", "Sulphate", "Nitrate", "Carbonate"], correct: 2, exp: "FeSO₄ + conc. H₂SO₄ brown ring at interface — confirms NO₃⁻." },
+          { q: "Blood-red colouration with NH₄SCN confirms:", opts: ["Fe²⁺", "Fe³⁺", "Cu²⁺", "Zn²⁺"], correct: 1, exp: "Fe³⁺ + 3SCN⁻ → [Fe(SCN)₃] intense blood-red — confirms Fe³⁺." },
+        ],
+        sidebarItems: ["Titration", "Flame Test", "Electrolysis", "Salt Analysis"],
+        sidebarLinks: ['titration', 'flame', 'electrolysis', 'salt'],
+      },
+
+      // ── BIOLOGY ─────────────────────────────────────────────────────────────────
+      photo: {
+        id: 'biology-photosynthesis', title: 'Rate of Photosynthesis', subject: 'Biology',
+        badge: { bg: 'rgba(76,175,125,.1)', color: 'var(--green)', border: 'rgba(76,175,125,.3)', icon: '🌿' },
+        desc: "Study how light intensity, CO₂ and temperature affect oxygen production in Hydrilla.",
+        formula: '6CO₂ + 6H₂O + Light → C₆H₁₂O₆ + 6O₂', vars: [{ s: 'I', d: 'Light intensity (%)' }, { s: '[CO₂]', d: 'CO₂ concentration' }, { s: 'T', d: 'Temperature (°C)' }],
+        theory: `Photosynthesis converts light energy into chemical energy. The rate is affected by three main limiting factors: light intensity, CO₂ concentration and temperature. <strong>Blackman's Law</strong>: the slowest factor limits the overall rate. Optimum temperature ≈ 25–35°C; higher temperatures denature enzymes (especially RuBisCO).`,
+        procedure: ["Place Hydrilla plant in beaker of water.", "Adjust light intensity slider — record bubble rate.", "Change CO₂ concentration (keep others fixed).", "Change temperature — observe enzyme-limited drop above 40°C."],
+        quiz: [
+          { q: "Gas released during photosynthesis:", opts: ["CO₂", "O₂", "N₂", "H₂"], correct: 1, exp: "Water is split (photolysis) and O₂ is released as by-product." },
+          { q: "Site of photosynthesis in plant cell:", opts: ["Nucleus", "Mitochondria", "Chloroplast", "Vacuole"], correct: 2, exp: "Chloroplasts contain chlorophyll that absorbs light energy." },
+          { q: "If light is doubled but CO₂ is very low:", opts: ["Rate doubles", "Rate unchanged", "Rate halves", "Rate = 0"], correct: 1, exp: "Blackman's Law: low CO₂ is the limiting factor — doubling light won't help." },
+          { q: "Optimum temperature for photosynthesis:", opts: ["5–10°C", "25–35°C", "45–55°C", "0°C"], correct: 1, exp: "Enzyme reactions peak at 25–35°C; above ~40°C enzymes denature." },
+        ],
+        sidebarItems: ["Photosynthesis", "Osmosis", "Mitosis", "DNA Extraction"],
+        sidebarLinks: ['photo', 'osmosis', 'mitosis', 'dna'],
+      },
+
+      osmosis: {
+        id: 'biology-osmosis', title: 'Osmosis in Plant Cells', subject: 'Biology',
+        badge: { bg: 'rgba(76,175,125,.1)', color: 'var(--green)', border: 'rgba(76,175,125,.3)', icon: '🌿' },
+        desc: "Observe osmosis in potato strips by varying external sucrose concentration.",
+        formula: 'Water: low solute → high solute through semi-permeable membrane', vars: [{ s: '[S]', d: 'Sucrose conc. (%)' }, { s: 'Δm', d: 'Change in mass (g)' }, { s: 'Ψ', d: 'Water potential' }],
+        theory: `Osmosis is the movement of water molecules through a semi-permeable membrane from a region of low solute concentration (high water potential) to high solute concentration (low water potential). In <strong>hypotonic</strong> solution: cell gains water (turgid). In <strong>hypertonic</strong> solution: cell loses water (plasmolysis).`,
+        procedure: ["Cut uniform potato strips (5 cm). Weigh each.", "Place strips in 0%, 5%, 10%, 15%, 20% sucrose solutions.", "Leave 30 minutes. Remove, blot dry, reweigh.", "Calculate % change in mass. Find isotonic point (0% change)."],
+        quiz: [
+          { q: "Osmosis: water moves from:", opts: ["High→low solute", "Low→high solute concentration", "High→low pressure only", "Equal concentrations"], correct: 1, exp: "Water moves from low solute (high water potential) to high solute (low water potential)." },
+          { q: "Potato strip in distilled water will:", opts: ["Shrink", "Gain mass", "Remain same", "Dissolve"], correct: 1, exp: "Potato has solutes; distilled water has none. Water enters by osmosis — strip gains mass." },
+          { q: "Plasmolysis occurs when a cell:", opts: ["Gains water", "Loses water to hypertonic solution", "Divides", "Absorbs glucose"], correct: 1, exp: "In hypertonic solution, cell loses water, membrane pulls from cell wall — plasmolysis." },
+          { q: "Isotonic solution causes:", opts: ["Turgidity", "Plasmolysis", "No net osmosis", "Bursting"], correct: 2, exp: "Isotonic: equal solute concentration inside and outside — no net water movement." },
+        ],
+        sidebarItems: ["Photosynthesis", "Osmosis", "Mitosis", "DNA Extraction"],
+        sidebarLinks: ['photo', 'osmosis', 'mitosis', 'dna'],
+      },
+
+      mitosis: {
+        id: 'biology-mitosis', title: 'Stages of Mitosis', subject: 'Biology',
+        badge: { bg: 'rgba(76,175,125,.1)', color: 'var(--green)', border: 'rgba(76,175,125,.3)', icon: '🌿' },
+        desc: "Identify and sequence Prophase, Metaphase, Anaphase and Telophase.",
+        formula: 'Diploid cell (2n) → 2 identical daughter cells (2n)', vars: [{ s: 'P', d: 'Prophase: chromatin condenses' }, { s: 'M', d: 'Metaphase: align at equator' }, { s: 'A', d: 'Anaphase: chromatids separate' }, { s: 'T', d: 'Telophase: nuclear envelopes reform' }],
+        theory: `Mitosis produces two genetically identical daughter cells from one parent cell. <strong>Prophase</strong>: chromosomes condense, spindle forms. <strong>Metaphase</strong>: chromosomes align at metaphase plate (ideal for karyotyping). <strong>Anaphase</strong>: sister chromatids pulled to poles. <strong>Telophase</strong>: nuclear envelopes reform, cytoplasm divides (cytokinesis).`,
+        procedure: ["Prepare onion root tip squash slide.", "Stain with aceto-orcein (binds DNA).", "Observe under microscope at 400×.", "Identify and sketch cells in each of the 4 phases (PMAT)."],
+        quiz: [
+          { q: "Chromosomes align at cell equator during:", opts: ["Prophase", "Anaphase", "Metaphase", "Telophase"], correct: 2, exp: "Metaphase: chromosomes align at the metaphase plate — used for karyotyping." },
+          { q: "Sister chromatids separate during:", opts: ["Prophase", "Metaphase", "Anaphase", "Telophase"], correct: 2, exp: "Anaphase: centromeres split, chromatids pulled to opposite poles by spindle fibres." },
+          { q: "Mitosis produces:", opts: ["4 haploid cells", "2 identical diploid cells", "2 haploid cells", "1 diploid cell"], correct: 1, exp: "Mitosis: 1 parent (2n) → 2 genetically identical daughter cells (2n)." },
+          { q: "Correct sequence of mitotic phases:", opts: ["MPAT", "PMAT", "AMPT", "TPAM"], correct: 1, exp: "PMAT: Prophase → Metaphase → Anaphase → Telophase." },
+        ],
+        sidebarItems: ["Photosynthesis", "Osmosis", "Mitosis", "DNA Extraction"],
+        sidebarLinks: ['photo', 'osmosis', 'mitosis', 'dna'],
+      },
+
+      dna: {
+        id: 'biology-dna-extraction', title: 'DNA Extraction', subject: 'Biology',
+        badge: { bg: 'rgba(76,175,125,.1)', color: 'var(--green)', border: 'rgba(76,175,125,.3)', icon: '🌿' },
+        desc: "Extract visible DNA from a banana using detergent, salt and cold ethanol.",
+        formula: 'Cell lysis + Salt precipitation → Visible DNA threads', vars: [{ s: 'SDS', d: 'Detergent — lyses membranes' }, { s: 'NaCl', d: 'Salt — neutralises DNA charge' }, { s: 'EtOH', d: 'Cold ethanol — precipitates DNA' }],
+        theory: `DNA extraction involves three steps: <strong>1. Lysis</strong> — detergent (SDS) breaks cell and nuclear membranes. <strong>2. Precipitation</strong> — salt (NaCl) neutralises the negative charge on DNA, allowing strands to clump. <strong>3. Isolation</strong> — cold ethanol is poured carefully over the filtrate; DNA is insoluble in ethanol and precipitates as visible white threads at the interface.`,
+        procedure: ["Mash banana + salt + washing-up liquid + water.", "Filter to remove solids.", "Gently pour cold ethanol on top of filtrate (do not mix).", "Spool the white DNA threads at the ethanol-water interface."],
+        quiz: [
+          { q: "DNA is found primarily in:", opts: ["Ribosome", "Cell membrane", "Nucleus & mitochondria", "Vacuole"], correct: 2, exp: "Most DNA is in the nucleus; mitochondria have their own small circular DNA." },
+          { q: "Role of detergent (SDS) in extraction:", opts: ["Cuts DNA", "Breaks cell & nuclear membranes", "Colours DNA", "Makes DNA soluble"], correct: 1, exp: "SDS disrupts the lipid bilayer, releasing cell contents including DNA." },
+          { q: "Cold ethanol is used because:", opts: ["DNA dissolves in it", "DNA is insoluble in ethanol — precipitates", "Ethanol denatures protein only", "It lyses cells"], correct: 1, exp: "DNA is insoluble in ethanol — it precipitates as visible white threads." },
+          { q: "DNA structure is:", opts: ["Single helix", "Triple helix", "Double helix", "Linear chain"], correct: 2, exp: "Watson & Crick (1953): DNA is a double helix — two antiparallel polynucleotide strands." },
+        ],
+        sidebarItems: ["Photosynthesis", "Osmosis", "Mitosis", "DNA Extraction"],
+        sidebarLinks: ['photo', 'osmosis', 'mitosis', 'dna'],
+      },
+
+      // ── MATHS ──────────────────────────────────────────────────────────────────
+      derivatives: {
+        id: 'mathematics-derivatives', title: 'Derivatives & Tangent Lines', subject: 'Mathematics',
+        badge: { bg: 'rgba(255,179,0,.1)', color: 'var(--amber)', border: 'rgba(255,179,0,.3)', icon: '📐' },
+        desc: "Visualise f'(x) as the slope of the tangent line to a curve at any point.",
+        formula: "f'(x) = lim[h→0] [f(x+h) − f(x)] / h", vars: [{ s: "f'(x)", d: "Derivative at x" }, { s: 'm', d: 'Slope of tangent' }, { s: 'h', d: 'Small increment → 0' }],
+        theory: `The derivative f'(x) gives the instantaneous rate of change of f at x — equivalently, the slope of the tangent line at that point. If f'(x) > 0: function increasing. f'(x) < 0: decreasing. f'(x) = 0: local maximum or minimum. Common rules: d/dx(xⁿ) = nxⁿ⁻¹, d/dx(sin x) = cos x.`,
+        procedure: ["Select a function from the dropdown.", "Drag the x slider to move the point along the curve.", "Observe the tangent line and its slope (derivative value).", "Compare computed slope with analytical derivative formula."],
+        quiz: [
+          { q: "Derivative of f(x) = x² at x = 3:", opts: ["9", "6", "3", "2"], correct: 1, exp: "f'(x) = 2x. f'(3) = 6 — slope of tangent at (3, 9)." },
+          { q: "Horizontal tangent line means f'(x) is:", opts: ["Positive", "Negative", "Zero", "Undefined"], correct: 2, exp: "Horizontal tangent: slope = 0 → f'(x) = 0 (local extremum)." },
+          { q: "Derivative of constant f(x) = 5:", opts: ["5", "1", "0", "x"], correct: 2, exp: "d/dx(constant) = 0 — no rate of change." },
+          { q: "If f'(x) > 0 on an interval:", opts: ["f decreasing", "f increasing", "f constant", "f concave down"], correct: 1, exp: "Positive derivative → function output increases as x increases." },
+        ],
+        sidebarItems: ["Derivatives"],
+        sidebarLinks: ['derivatives'],
+      },
+
+      // ── CS ─────────────────────────────────────────────────────────────────────
+      logic: {
+        id: 'cs-logic-gates', title: 'Logic Gates Simulator', subject: 'Computer Science',
+        badge: { bg: 'rgba(255,107,107,.1)', color: 'var(--coral)', border: 'rgba(255,107,107,.3)', icon: '💻' },
+        desc: "Build Boolean circuits with AND, OR, NOT, NAND, NOR and XOR gates. Verify truth tables.",
+        formula: 'Y = A·B (AND) | Y = A+B (OR) | Y = Ā (NOT)', vars: [{ s: 'A,B', d: 'Binary inputs (0 or 1)' }, { s: 'Y', d: 'Output' }],
+        theory: `Logic gates are the building blocks of digital circuits. Each gate implements a Boolean function: <strong>AND</strong>: output 1 only when ALL inputs are 1. <strong>OR</strong>: output 1 when ANY input is 1. <strong>NOT</strong>: inverts input. <strong>NAND/NOR</strong>: universal gates — any circuit can be built from them alone. <strong>XOR</strong>: output 1 when inputs DIFFER.`,
+        procedure: ["Select gate type from the toggle buttons.", "Toggle inputs A and B between 0 and 1.", "Observe output Y and the truth table update in real-time.", "Try building XOR from NAND gates (requires 4 NAND gates)."],
+        quiz: [
+          { q: "AND gate outputs 1 only when:", opts: ["Any input = 1", "Both inputs = 1", "Both inputs = 0", "Any input = 0"], correct: 1, exp: "AND: Y = A·B = 1 only when A = 1 AND B = 1." },
+          { q: "NOT gate: input A = 0, output Y =", opts: ["0", "1", "Undefined", "Depends on voltage"], correct: 1, exp: "NOT inverts: Y = Ā. NOT(0) = 1." },
+          { q: "NAND is equivalent to:", opts: ["AND then NOT", "OR then NOT", "Two NOTs", "XOR then AND"], correct: 0, exp: "NAND = NOT-AND: Y = NOT(A·B). Universal gate." },
+          { q: "XOR outputs 1 when:", opts: ["Both inputs = 1", "Both inputs = 0", "Inputs differ", "Inputs are equal"], correct: 2, exp: "XOR (exclusive OR): Y = A⊕B = 1 only when A ≠ B." },
+        ],
+        sidebarItems: ["Logic Gates"],
+        sidebarLinks: ['logic'],
+      },
+    };
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       LAB PAGE GENERATOR
+    ═══════════════════════════════════════════════════════════════════════════ */
+    function buildQuizHTML(labKey) {
+      const lab = LABS[labKey];
+      const qs = lab.quiz;
+      let html = `<div id="quiz-${labKey}-questions">`;
+      qs.forEach((q, qi) => {
+        html += `<div class="quiz-card">
+      <span class="quiz-q-num">Question ${qi + 1} of ${qs.length}</span>
+      <div class="quiz-q">${q.q}</div>
+      <div class="options">`;
+        q.opts.forEach((opt, oi) => {
+          html += `<div class="option" data-correct="${q.correct}" onclick="handleAnswer('${labKey}',${qi},${oi},${oi === q.correct},this)">
+        <div class="option-radio"></div>${opt}</div>`;
+        });
+        html += `</div>
+      <div class="quiz-feedback" id="qfb-${labKey}-${qi}" style="background:rgba(76,175,125,.1);border:1px solid rgba(76,175,125,.3);color:var(--green)">
+        ✓ ${q.exp}</div></div>`;
+      });
+      html += `<button class="quiz-btn" onclick="submitQuiz('${labKey}',${qs.length},${JSON.stringify(qs)})">Submit & Get Score</button></div>
+  <div class="quiz-score" id="quiz-${labKey}-score">
+    <div class="score-circle"><div class="score-big">—</div><div class="score-denom">/ ${qs.length}</div></div>
+    <p class="score-msg" style="color:var(--text2);font-size:.9rem;margin:.5rem 0 1.5rem"></p>
+    <button class="quiz-btn" onclick="retryQuiz('${labKey}')">↺ Try Again</button>
+  </div>`;
+      return html;
+    }
+
+    function buildLabPage(labKey) {
+      const lab = LABS[labKey];
+      const procedureHTML = lab.procedure.map((p, i) => `<li class="step-item"><div class="step-num">${i + 1}</div><div class="step-text">${p}</div></li>`).join('');
+      const varsHTML = lab.vars.map(v => `<div class="var-item"><span class="var-sym">${v.s}</span><span class="var-desc">${v.d}</span></div>`).join('');
+      const sidebarHTML = lab.sidebarItems.map((item, i) => `<div class="sidebar-item${item === lab.title ? ' active' : ''}" onclick="goLab('${lab.sidebarLinks[i]}')"><span class="sidebar-dot"></span>${item}</div>`).join('');
+
+      return `<div class="page" id="page-lab-${labKey}">
+  <div class="lab-layout">
+    <aside class="lab-sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">${lab.subject} Labs</div>
+        ${sidebarHTML}
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Resources</div>
+        <div class="sidebar-item" onclick="notify('📄 Notes saved!')"><span>📄</span> Notes</div>
+        <div class="sidebar-item" onclick="goPage('dashboard')"><span>📊</span> My Progress</div>
+      </div>
+    </aside>
+    <main class="lab-main">
+      <div class="lab-breadcrumb">
+        <span onclick="goPage('home')">Home</span><span class="sep"> / </span>
+        <span onclick="goPage('subjects')">${lab.subject}</span><span class="sep"> / </span>
+        <span>${lab.title}</span>
+      </div>
+      <div class="lab-title-row">
+        <div class="lab-title"><h1>${lab.title}</h1><p>${lab.desc}</p></div>
+        <span class="lab-badge" style="background:${lab.badge.bg};color:${lab.badge.color};border:1px solid ${lab.badge.border}">${lab.badge.icon} ${lab.subject}</span>
+      </div>
+      <div class="lab-tabs" id="tabs-${labKey}">
+        <button class="lab-tab-btn active" onclick="switchTab(this,'${labKey}')">Theory</button>
+        <button class="lab-tab-btn" onclick="switchTab(this,'${labKey}')">Procedure</button>
+        <button class="lab-tab-btn" onclick="switchTab(this,'${labKey}')">Simulation</button>
+        <button class="lab-tab-btn" onclick="switchTab(this,'${labKey}')">Quiz</button>
+      </div>
+      <div class="lab-tab-content active" id="${labKey}-tab-0">
+        <div class="theory-block">
+          <h3>Theory</h3>
+          <p>${lab.theory}</p>
+          <div class="formula-box">${lab.formula}</div>
+          <div class="var-grid">${varsHTML}</div>
+        </div>
+      </div>
+      <div class="lab-tab-content" id="${labKey}-tab-1">
+        <ol class="steps-list">${procedureHTML}</ol>
+      </div>
+      <div class="lab-tab-content" id="${labKey}-tab-2" id="sim-tab-${labKey}">
+        ${buildSimHTML(labKey)}
+      </div>
+      <div class="lab-tab-content" id="${labKey}-tab-3">
+        ${buildQuizHTML(labKey)}
+      </div>
+    </main>
+  </div>
+</div>`;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       SIMULATION HTML BUILDERS (one per lab)
+    ═══════════════════════════════════════════════════════════════════════════ */
+    function buildSimHTML(key) {
+      const sims = {
+
+        ohm: `<div class="sim-card"><div class="sim-header"><span>⚡</span><h3>Ohm's Law Simulator</h3><div class="sim-live">Live</div></div>
+      <div class="sim-body">
+        <div>
+          <div class="control-group"><div class="control-label"><span>Voltage (V)</span><span class="control-val" id="ohm-v-lbl">6 V</span></div>
+            <input type="range" min="1" max="24" value="6" id="ohm-V" oninput="simOhm()"></div>
+          <div class="control-group"><div class="control-label"><span>Resistance (Ω)</span><span class="control-val" id="ohm-r-lbl">6 Ω</span></div>
+            <input type="range" min="1" max="30" value="6" id="ohm-R" oninput="simOhm()"></div>
+          <canvas id="ohm-circuit" height="110" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:.5rem"></canvas>
+        </div>
+        <div>
+          <div class="sim-result-box">
+            <div class="result-label">Current (I)</div>
+            <div class="result-value" id="ohm-I">1.00</div>
+            <div class="result-unit">Amperes (A)</div>
+            <div class="result-formula" id="ohm-f">I = 6V ÷ 6Ω = 1.00 A</div>
+          </div>
+          <canvas id="ohm-graph" height="140" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:1rem"></canvas>
+        </div>
+      </div></div>`,
+
+        hooke: `<div class="sim-card"><div class="sim-header"><span>🔩</span><h3>Hooke's Law Simulator</h3><div class="sim-live">Live</div></div>
+      <div class="sim-body">
+        <div>
+          <div class="control-group"><div class="control-label"><span>Mass (g)</span><span class="control-val" id="hk-m-lbl">200 g</span></div>
+            <input type="range" min="0" max="800" value="200" step="50" id="hk-M" oninput="simHooke()"></div>
+          <div class="control-group"><div class="control-label"><span>Spring Constant k (N/m)</span><span class="control-val" id="hk-k-lbl">50 N/m</span></div>
+            <input type="range" min="10" max="200" value="50" step="10" id="hk-K" oninput="simHooke()"></div>
+          <canvas id="hk-spring" height="200" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:.5rem"></canvas>
+        </div>
+        <div>
+          <div class="sim-result-box">
+            <div class="result-label">Extension (x)</div>
+            <div class="result-value" id="hk-X" style="color:var(--amber)">0.039</div>
+            <div class="result-unit">metres</div>
+            <div class="result-formula" id="hk-f">x = F/k = 1.96/50 = 0.039 m</div>
+          </div>
+          <div class="sim-result-box" style="margin-top:1rem">
+            <div class="result-label">Restoring Force (F)</div>
+            <div class="result-value" id="hk-F" style="font-size:2rem;color:var(--violet)">1.96</div>
+            <div class="result-unit">Newtons</div>
+          </div>
+          <canvas id="hk-graph" height="130" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:1rem"></canvas>
+        </div>
+      </div></div>`,
+
+        pendulum: `<div class="sim-card"><div class="sim-header"><span>⏱</span><h3>Simple Pendulum Simulator</h3><div class="sim-live">Live</div></div>
+      <div class="sim-body">
+        <div>
+          <div class="control-group"><div class="control-label"><span>Length L (m)</span><span class="control-val" id="pnd-l-lbl">0.50 m</span></div>
+            <input type="range" min="10" max="200" value="50" id="pnd-L" oninput="simPendulum()"></div>
+          <div class="control-group"><div class="control-label"><span>Gravity g (m/s²)</span><span class="control-val" id="pnd-g-lbl">9.8</span></div>
+            <input type="range" min="16" max="98" value="98" id="pnd-G" oninput="simPendulum()"></div>
+          <canvas id="pnd-canvas" height="200" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:.5rem"></canvas>
+        </div>
+        <div>
+          <div class="sim-result-box">
+            <div class="result-label">Time Period (T)</div>
+            <div class="result-value" id="pnd-T">1.42</div>
+            <div class="result-unit">seconds</div>
+            <div class="result-formula" id="pnd-f">T = 2π√(L/g)</div>
+          </div>
+          <div class="sim-result-box" style="margin-top:1rem">
+            <div class="result-label">Frequency (f)</div>
+            <div class="result-value" id="pnd-F" style="font-size:2rem;color:var(--amber)">0.70</div>
+            <div class="result-unit">Hz</div>
+          </div>
+          <canvas id="pnd-graph" height="130" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:1rem"></canvas>
+        </div>
+      </div></div>`,
+
+        refraction: `<div class="sim-card"><div class="sim-header"><span>🔦</span><h3>Snell's Law Simulator</h3><div class="sim-live">Live</div></div>
+      <div class="sim-body">
+        <div>
+          <div class="control-group"><div class="control-label"><span>Angle of Incidence θ₁ (°)</span><span class="control-val" id="ref-a-lbl">30°</span></div>
+            <input type="range" min="0" max="85" value="30" id="ref-A" oninput="simRefraction()"></div>
+          <div class="control-group"><div class="control-label"><span>Refractive Index n₂</span><span class="control-val" id="ref-n-lbl">1.50</span></div>
+            <input type="range" min="100" max="240" value="150" id="ref-N" oninput="simRefraction()"></div>
+          <canvas id="ref-canvas" height="220" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:.5rem"></canvas>
+        </div>
+        <div>
+          <div class="sim-result-box">
+            <div class="result-label">Angle of Refraction θ₂</div>
+            <div class="result-value" id="ref-T">19.5°</div>
+            <div class="result-unit">degrees</div>
+            <div class="result-formula" id="ref-f">n₁ sin θ₁ = n₂ sin θ₂</div>
+          </div>
+          <div class="sim-result-box" style="margin-top:1rem">
+            <div class="result-label">Refractive Index (measured)</div>
+            <div class="result-value" id="ref-NM" style="font-size:2rem;color:var(--amber)">1.50</div>
+            <div class="result-unit">sin θ₁ / sin θ₂</div>
+          </div>
+        </div>
+      </div></div>`,
+
+        titration: `<div class="sim-card"><div class="sim-header"><span>🧪</span><h3>Titration Simulator</h3><div class="sim-live">Live</div></div>
+      <div class="sim-body">
+        <div>
+          <div class="control-group"><div class="control-label"><span>NaOH Added (mL)</span><span class="control-val" id="tit-v-lbl">0 mL</span></div>
+            <input type="range" min="0" max="40" value="0" id="tit-V" oninput="simTitration()"></div>
+          <canvas id="tit-beaker" height="210" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:.5rem"></canvas>
+        </div>
+        <div>
+          <div class="sim-result-box">
+            <div class="result-label">pH Value</div>
+            <div class="result-value" id="tit-pH">1.0</div>
+            <div class="result-unit" id="tit-label">Strongly Acidic</div>
+          </div>
+          <div style="margin-top:1rem;background:var(--bg3);border-radius:var(--r);padding:1rem">
+            <div style="height:16px;border-radius:100px;background:linear-gradient(90deg,#c00,#f60,#fc0,#6a0,#069,#006,#306);position:relative;margin-bottom:.5rem">
+              <div id="tit-marker" style="position:absolute;top:-5px;width:26px;height:26px;border-radius:50%;background:#fff;border:3px solid #000;transform:translateX(-50%);left:0%;transition:left .5s"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text3)"><span>0 Acid</span><span>7</span><span>14 Base</span></div>
+          </div>
+          <canvas id="tit-graph" height="130" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:1rem"></canvas>
+        </div>
+      </div></div>`,
+
+        flame: `<div class="sim-card"><div class="sim-header"><span>🔥</span><h3>Flame Test Simulator</h3><div class="sim-live">Live</div></div>
+      <div class="sim-body">
+        <div>
+          <div class="control-group"><div class="control-label"><span>Select Metal Salt</span></div>
+            <select class="sim-select" id="flame-salt" onchange="simFlame()">
+              <option value="li">Lithium (Li⁺) — Crimson Red</option>
+              <option value="na">Sodium (Na⁺) — Intense Yellow</option>
+              <option value="k">Potassium (K⁺) — Lilac / Violet</option>
+              <option value="cu">Copper (Cu²⁺) — Blue-Green</option>
+              <option value="ca">Calcium (Ca²⁺) — Brick Red</option>
+              <option value="ba">Barium (Ba²⁺) — Apple Green</option>
+            </select>
+          </div>
+          <canvas id="flame-canvas" height="230" style="width:100%;border-radius:8px;background:#0a0504;margin-top:.5rem"></canvas>
+        </div>
+        <div>
+          <div class="sim-result-box" id="flame-result-box">
+            <div class="result-label">Flame Colour</div>
+            <div class="result-value" id="flame-color-name" style="font-size:1.8rem">Crimson Red</div>
+            <div class="result-unit" id="flame-wavelength">λ ≈ 670 nm</div>
+            <div class="result-formula" id="flame-ion">Li⁺ → excited electron emission</div>
+          </div>
+          <div style="margin-top:1rem;background:var(--bg3);border-radius:var(--r);padding:1rem">
+            <div style="font-size:.78rem;color:var(--text2);margin-bottom:.75rem">Quick Reference</div>
+            ${[['Li⁺', 'Crimson', '#dc143c'], ['Na⁺', 'Yellow', '#ffcc00'], ['K⁺', 'Lilac', '#9b59b6'], ['Cu²⁺', 'Blue-green', '#00a896'], ['Ca²⁺', 'Brick red', '#cc4400'], ['Ba²⁺', 'Apple green', '#7ec850']].map(([ion, col, hex]) =>
+          `<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem;font-size:.8rem">
+                <div style="width:14px;height:14px;border-radius:3px;background:${hex}"></div>
+                <span style="min-width:36px;font-family:var(--mono);color:var(--teal)">${ion}</span>
+                <span style="color:var(--text2)">${col}</span></div>`).join('')}
+          </div>
+        </div>
+      </div></div>`,
+
+        electrolysis: `<div class="sim-card"><div class="sim-header"><span>⚡</span><h3>Electrolysis Simulator</h3><div class="sim-live">Live</div></div>
+      <div class="sim-body">
+        <div>
+          <div class="control-group"><div class="control-label"><span>Applied Voltage (V)</span><span class="control-val" id="el-v-lbl">6 V</span></div>
+            <input type="range" min="1" max="24" value="6" id="el-V" oninput="simElectrolysis()"></div>
+          <div class="control-group"><div class="control-label"><span>Electrolyte Concentration</span><span class="control-val" id="el-c-lbl">5%</span></div>
+            <input type="range" min="1" max="20" value="5" id="el-C" oninput="simElectrolysis()"></div>
+          <canvas id="el-canvas" height="210" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:.5rem"></canvas>
+        </div>
+        <div>
+          <div class="sim-result-box">
+            <div class="result-label">H₂ Volume (cathode)</div>
+            <div class="result-value" id="el-H2" style="color:var(--cyan,#00BFA5)">0.0</div>
+            <div class="result-unit">mL / min</div>
+          </div>
+          <div class="sim-result-box" style="margin-top:1rem">
+            <div class="result-label">O₂ Volume (anode)</div>
+            <div class="result-value" id="el-O2" style="font-size:2rem;color:var(--amber)">0.0</div>
+            <div class="result-unit">mL / min</div>
+            <div class="result-formula" id="el-ratio">H₂:O₂ ratio = 2:1</div>
+          </div>
+        </div>
+      </div></div>`,
+
+        salt: `<div class="sim-card"><div class="sim-header"><span>🔬</span><h3>Salt Analysis Simulator</h3><div class="sim-live">Live</div></div>
+      <div class="sim-body">
+        <div>
+          <div class="control-group"><div class="control-label"><span>Unknown Salt</span></div>
+            <select class="sim-select" id="salt-select" onchange="simSalt()">
+              <option value="na2co3">Sample A (Na₂CO₃)</option>
+              <option value="fecl3">Sample B (FeCl₃)</option>
+              <option value="caso4">Sample C (CaSO₄)</option>
+              <option value="cuso4">Sample D (CuSO₄)</option>
+            </select>
+          </div>
+          <div class="control-group"><div class="control-label"><span>Add Reagent</span></div>
+            <div class="toggle-row" id="salt-reagents">
+              <button class="toggle-btn" onclick="saltTest('hcl',this)">+ HCl</button>
+              <button class="toggle-btn" onclick="saltTest('bacl2',this)">+ BaCl₂</button>
+              <button class="toggle-btn" onclick="saltTest('agno3',this)">+ AgNO₃</button>
+              <button class="toggle-btn" onclick="saltTest('nh4scn',this)">+ NH₄SCN</button>
+              <button class="toggle-btn" onclick="saltTest('flame',this)">🔥 Flame</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="sim-result-box" id="salt-result">
+            <div class="result-label">Observation</div>
+            <div class="result-value" style="font-size:1.2rem;line-height:1.3" id="salt-obs">Select a salt and add a reagent</div>
+          </div>
+          <div style="margin-top:1rem;background:var(--bg3);border-radius:var(--r);padding:1rem;font-size:.82rem">
+            <div style="color:var(--text2);margin-bottom:.5rem;font-weight:600">Observation Log</div>
+            <div id="salt-log" style="color:var(--text3);line-height:1.8;max-height:130px;overflow-y:auto"></div>
+          </div>
+        </div>
+      </div></div>`,
+
+        photo: `<div class="sim-card"><div class="sim-header"><span>🌿</span><h3>Photosynthesis Simulator</h3><div class="sim-live">Live</div></div>
+      <div class="sim-body">
+        <div>
+          <div class="control-group"><div class="control-label"><span>Light Intensity</span><span class="control-val" id="ph-l-lbl">50%</span></div>
+            <input type="range" min="0" max="100" value="50" id="ph-L" oninput="simPhoto()"></div>
+          <div class="control-group"><div class="control-label"><span>CO₂ Concentration</span><span class="control-val" id="ph-c-lbl">0.04%</span></div>
+            <input type="range" min="1" max="10" value="4" id="ph-C" oninput="simPhoto()"></div>
+          <div class="control-group"><div class="control-label"><span>Temperature (°C)</span><span class="control-val" id="ph-t-lbl">25°C</span></div>
+            <input type="range" min="5" max="50" value="25" id="ph-T" oninput="simPhoto()"></div>
+          <canvas id="ph-plant" height="110" style="width:100%;border-radius:8px;background:rgba(76,175,125,.05)"></canvas>
+        </div>
+        <div>
+          <div class="sim-result-box">
+            <div class="result-label">O₂ Bubbles / min</div>
+            <div class="result-value" id="ph-rate" style="color:var(--green)">0</div>
+            <div class="result-unit">bubbles per minute</div>
+            <div class="result-formula" id="ph-note">Adjust factors to see rate</div>
+          </div>
+          <div style="margin-top:1rem;background:var(--bg3);border-radius:var(--r);padding:1rem">
+            <div style="font-size:.75rem;color:var(--text3);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.06em">Limiting Factors</div>
+            <div class="mini-bars">
+              <div class="mini-bar-row"><div class="mini-bar-label"><span>Light</span><span id="lf-l">50%</span></div><div class="mini-bar-track"><div class="mini-bar-fill" id="lf-l-bar" style="width:50%;background:var(--amber)"></div></div></div>
+              <div class="mini-bar-row"><div class="mini-bar-label"><span>CO₂</span><span id="lf-c">40%</span></div><div class="mini-bar-track"><div class="mini-bar-fill" id="lf-c-bar" style="width:40%;background:var(--teal)"></div></div></div>
+              <div class="mini-bar-row"><div class="mini-bar-label"><span>Temperature</span><span id="lf-t">75%</span></div><div class="mini-bar-track"><div class="mini-bar-fill" id="lf-t-bar" style="width:75%;background:var(--violet)"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div></div>`,
+
+        osmosis: `<div class="sim-card"><div class="sim-header"><span>🥔</span><h3>Osmosis Simulator</h3><div class="sim-live">Live</div></div>
+      <div class="sim-body">
+        <div>
+          <div class="control-group"><div class="control-label"><span>External Sucrose Concentration (%)</span><span class="control-val" id="os-c-lbl">0%</span></div>
+            <input type="range" min="0" max="20" value="0" id="os-C" oninput="simOsmosis()"></div>
+          <div class="control-group"><div class="control-label"><span>Internal Cell Solute (%)</span><span class="control-val" id="os-i-lbl">10% (fixed)</span></div></div>
+          <canvas id="os-canvas" height="200" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:.5rem"></canvas>
+        </div>
+        <div>
+          <div class="sim-result-box">
+            <div class="result-label">Mass Change (%)</div>
+            <div class="result-value" id="os-mass">+25.0%</div>
+            <div class="result-unit" id="os-state">Turgid (water entering)</div>
+            <div class="result-formula" id="os-note">External &lt; Internal → water enters</div>
+          </div>
+          <canvas id="os-graph" height="130" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:1rem"></canvas>
+        </div>
+      </div></div>`,
+
+        mitosis: `<div class="sim-card"><div class="sim-header"><span>🔬</span><h3>Mitosis Stage Viewer</h3><div class="sim-live">Live</div></div>
+      <div class="sim-body">
+        <div>
+          <div class="control-group"><div class="control-label"><span>Select Phase</span></div>
+            <div class="toggle-row">
+              <button class="toggle-btn active" onclick="simMitosis('prophase',this)">Prophase</button>
+              <button class="toggle-btn" onclick="simMitosis('metaphase',this)">Metaphase</button>
+              <button class="toggle-btn" onclick="simMitosis('anaphase',this)">Anaphase</button>
+              <button class="toggle-btn" onclick="simMitosis('telophase',this)">Telophase</button>
+            </div>
+          </div>
+          <canvas id="mit-canvas" height="240" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:.5rem"></canvas>
+        </div>
+        <div>
+          <div class="sim-result-box" id="mit-info">
+            <div class="result-label">Phase</div>
+            <div class="result-value" id="mit-phase" style="font-size:1.5rem">Prophase</div>
+            <div class="result-unit" id="mit-desc">Chromatin condenses into chromosomes</div>
+          </div>
+          <div style="margin-top:1rem;background:var(--bg3);border-radius:var(--r);padding:1rem;font-size:.82rem;color:var(--text2)">
+            <div style="font-weight:600;margin-bottom:.5rem;color:var(--text)">Key Events</div>
+            <div id="mit-events" style="line-height:1.8">• Chromatin condenses<br/>• Spindle begins to form<br/>• Nuclear envelope breaks down</div>
+          </div>
+        </div>
+      </div></div>`,
+
+        dna: `<div class="sim-card"><div class="sim-header"><span>🧬</span><h3>DNA Extraction Simulator</h3><div class="sim-live">Live</div></div>
+      <div class="sim-body">
+        <div>
+          <div class="control-group"><div class="control-label"><span>Step</span></div>
+            <div class="toggle-row">
+              <button class="toggle-btn active" onclick="simDNA(0,this)">1. Mash</button>
+              <button class="toggle-btn" onclick="simDNA(1,this)">2. Filter</button>
+              <button class="toggle-btn" onclick="simDNA(2,this)">3. Ethanol</button>
+              <button class="toggle-btn" onclick="simDNA(3,this)">4. Spool</button>
+            </div>
+          </div>
+          <canvas id="dna-canvas" height="240" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:.5rem"></canvas>
+        </div>
+        <div>
+          <div class="sim-result-box" id="dna-info">
+            <div class="result-label">Current Step</div>
+            <div class="result-value" id="dna-step-name" style="font-size:1.4rem">Lysis</div>
+            <div class="result-unit" id="dna-step-desc">Breaking open cells</div>
+          </div>
+          <div style="margin-top:1rem;background:var(--bg3);border-radius:var(--r);padding:1rem;font-size:.82rem;color:var(--text2)">
+            <div style="font-weight:600;margin-bottom:.5rem;color:var(--text)">What's Happening</div>
+            <div id="dna-detail" style="line-height:1.8">• Detergent (SDS) lyses cell & nuclear membranes<br/>• Salt neutralises DNA charge<br/>• DNA released into solution</div>
+          </div>
+        </div>
+      </div></div>`,
+
+        derivatives: `<div class="sim-card"><div class="sim-header"><span>📐</span><h3>Derivative Visualiser</h3><div class="sim-live">Live</div></div>
+      <div class="sim-body">
+        <div>
+          <div class="control-group"><div class="control-label"><span>Function</span></div>
+            <select class="sim-select" id="deriv-fn" onchange="simDerivative()">
+              <option value="sq">f(x) = x²</option>
+              <option value="cu">f(x) = x³</option>
+              <option value="sin">f(x) = sin(x)</option>
+              <option value="cos">f(x) = cos(x)</option>
+              <option value="sqrt">f(x) = √x</option>
+              <option value="abs">f(x) = |x|</option>
+            </select>
+          </div>
+          <div class="control-group"><div class="control-label"><span>Point x</span><span class="control-val" id="deriv-x-lbl">x = 1.0</span></div>
+            <input type="range" min="-30" max="30" value="10" id="deriv-X" oninput="simDerivative()"></div>
+        </div>
+        <div>
+          <div class="sim-result-box">
+            <div class="result-label">Derivative f'(x)</div>
+            <div class="result-value" id="deriv-val">2.00</div>
+            <div class="result-unit">slope of tangent line</div>
+            <div class="result-formula" id="deriv-formula">f'(x) = 2x → f'(1) = 2.00</div>
+          </div>
+        </div>
+      </div>
+      <canvas id="deriv-canvas" height="220" style="width:100%;border-radius:0 0 var(--r2) var(--r2);background:var(--bg3)"></canvas>
+      </div>`,
+
+        logic: `<div class="sim-card"><div class="sim-header"><span>💻</span><h3>Logic Gates Simulator</h3><div class="sim-live">Live</div></div>
+      <div class="sim-body">
+        <div>
+          <div class="control-group"><div class="control-label"><span>Gate Type</span></div>
+            <div class="toggle-row" id="gate-types">
+              <button class="toggle-btn active" onclick="setGate('AND',this)">AND</button>
+              <button class="toggle-btn" onclick="setGate('OR',this)">OR</button>
+              <button class="toggle-btn" onclick="setGate('NOT',this)">NOT</button>
+              <button class="toggle-btn" onclick="setGate('NAND',this)">NAND</button>
+              <button class="toggle-btn" onclick="setGate('NOR',this)">NOR</button>
+              <button class="toggle-btn" onclick="setGate('XOR',this)">XOR</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:1rem;margin-top:1rem">
+            <div style="flex:1;text-align:center">
+              <div style="font-size:.78rem;color:var(--text2);margin-bottom:.5rem">Input A</div>
+              <button onclick="toggleInput('A')" id="btn-A" style="width:60px;height:60px;border-radius:12px;font-size:1.5rem;font-weight:700;background:var(--bg3);border:2px solid var(--border2);color:var(--coral);cursor:pointer;transition:all .2s">0</button>
+            </div>
+            <div style="flex:1;text-align:center">
+              <div style="font-size:.78rem;color:var(--text2);margin-bottom:.5rem">Input B</div>
+              <button onclick="toggleInput('B')" id="btn-B" style="width:60px;height:60px;border-radius:12px;font-size:1.5rem;font-weight:700;background:var(--bg3);border:2px solid var(--border2);color:var(--coral);cursor:pointer;transition:all .2s">0</button>
+            </div>
+            <div style="flex:1;text-align:center">
+              <div style="font-size:.78rem;color:var(--text2);margin-bottom:.5rem">Output Y</div>
+              <div id="gate-out" style="width:60px;height:60px;border-radius:12px;font-size:1.5rem;font-weight:700;background:var(--bg3);border:2px solid var(--green);color:var(--coral);display:flex;align-items:center;justify-content:center;margin:0 auto;transition:all .2s">0</div>
+            </div>
+          </div>
+          <canvas id="gate-canvas" height="130" style="width:100%;border-radius:8px;background:var(--bg3);margin-top:1rem"></canvas>
+        </div>
+        <div>
+          <div class="sim-result-box">
+            <div class="result-label">Boolean Expression</div>
+            <div class="result-value" id="gate-expr" style="font-size:1.4rem;font-family:var(--mono)">Y = A·B</div>
+          </div>
+          <div style="margin-top:1rem;background:var(--bg3);border-radius:var(--r);padding:1rem">
+            <div style="font-size:.75rem;color:var(--text3);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.06em">Truth Table</div>
+            <table id="truth-table" style="width:100%;font-family:var(--mono);font-size:.82rem;border-collapse:collapse">
+              <thead><tr style="color:var(--text2)"><th style="padding:.3rem .5rem">A</th><th style="padding:.3rem .5rem">B</th><th style="padding:.3rem .5rem">Y</th></tr></thead>
+              <tbody id="truth-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div></div>`,
+      };
+      return sims[key] || '<p style="color:var(--text2)">Simulation loading…</p>';
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       INJECT ALL LAB PAGES
+    ═══════════════════════════════════════════════════════════════════════════ */
+    (function () {
+      const container = document.getElementById('lab-pages-container');
+      Object.keys(LABS).forEach(key => {
+        container.innerHTML += buildLabPage(key);
+      });
+    })();
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       ROUTER
+    ═══════════════════════════════════════════════════════════════════════════ */
+    const labKeys = new Set(Object.keys(LABS));
+    function goPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const el = document.getElementById('page-' + id);
+      if (el) el.classList.add('active');
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.toggle('active', l.dataset.page === id));
+      const pb = document.getElementById('lab-progress');
+      pb.style.display = labKeys.has(id.replace('lab-', '')) ? 'block' : 'none';
+      document.getElementById('lpf').style.width = '25%';
+      window.scrollTo(0, 0);
+      closeMob();
+      if (id === 'dashboard') loadDashboard();
+    }
+    function goLab(key) {
+      goPage('lab-' + key);
+      // Init simulations on first visit
+      setTimeout(() => { initSim(key); }, 50);
+    }
+    function switchTab(btn, labKey) {
+      const tabBtns = btn.parentElement.querySelectorAll('.lab-tab-btn');
+      tabBtns.forEach((t, i) => {
+        t.classList.toggle('active', t === btn);
+        const c = document.getElementById(`${labKey}-tab-${i}`);
+        if (c) c.classList.toggle('active', t === btn);
+      });
+      const idx = [...tabBtns].indexOf(btn);
+      document.getElementById('lpf').style.width = ((idx + 1) / 4 * 100) + '%';
+      if (idx === 2) setTimeout(() => initSim(labKey), 50);
+    }
+    let mobOpen = false;
+    function toggleMob() {
+      mobOpen = !mobOpen;
+      const nl = document.getElementById('nav-links');
+      nl.style.cssText = mobOpen ? 'display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:rgba(8,12,24,.97);padding:1rem;gap:.25rem;backdrop-filter:blur(20px);border-bottom:1px solid var(--border)' : '';
+    }
+    function closeMob() { mobOpen = false; document.getElementById('nav-links').style.cssText = ''; }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       TOAST
+    ═══════════════════════════════════════════════════════════════════════════ */
+    let toastT;
+    function notify(msg) {
+      document.getElementById('toast-msg').textContent = msg;
+      document.getElementById('toast').classList.add('show');
+      clearTimeout(toastT);
+      toastT = setTimeout(() => document.getElementById('toast').classList.remove('show'), 3200);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       PARTICLES
+    ═══════════════════════════════════════════════════════════════════════════ */
+    (function () {
+      const bg = document.getElementById('particles-bg');
+      ['#00BFA5', '#7C6FFF', '#FFB300', '#FF6B6B', '#4CAF7D'].forEach((c, ci) => {
+        for (let i = 0; i < 7; i++) {
+          const p = document.createElement('div');
+          p.className = 'particle';
+          const sz = 2 + Math.random() * 4;
+          p.style.cssText = `width:${sz}px;height:${sz}px;background:${c};left:${Math.random() * 100}%;bottom:-10px;animation-duration:${9 + Math.random() * 12}s;animation-delay:${Math.random() * 10}s`;
+          bg.appendChild(p);
+        }
+      });
+    })();
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       COUNTER ANIMATION
+    ═══════════════════════════════════════════════════════════════════════════ */
+    function animateCounters() {
+      document.querySelectorAll('[data-count]').forEach(el => {
+        const target = +el.dataset.count;
+        let cur = 0; const step = target / 50;
+        const t = setInterval(() => {
+          cur = Math.min(cur + step, target);
+          el.textContent = (target >= 1000 ? Math.round(cur / 1000) + 'k' : Math.round(cur)) + (target === 100 ? '%' : '');
+          if (cur >= target) clearInterval(t);
+        }, 28);
+      });
+    }
+    setTimeout(animateCounters, 200);
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       SIMULATION ENGINES — all 14
+    ═══════════════════════════════════════════════════════════════════════════ */
+
+    // ── init dispatcher ──────────────────────────────────────────────────────────
+    const simInited = {};
+    function initSim(key) {
+      if (simInited[key]) return;
+      simInited[key] = true;
+      const fn = ({
+        ohm: simOhm, hooke: simHooke, pendulum: simPendulum, refraction: simRefraction,
+        titration: simTitration, flame: simFlame, electrolysis: simElectrolysis, salt: simSalt,
+        photo: simPhoto, osmosis: simOsmosis, mitosis: () => simMitosis('prophase', null),
+        dna: () => simDNA(0, null), derivatives: simDerivative, logic: () => setGate('AND', null)
+      })[key];
+      if (fn) fn();
+    }
+
+    // ── canvas helper ────────────────────────────────────────────────────────────
+    function getCtx(id) {
+      const c = document.getElementById(id); if (!c) return null;
+      const dpr = window.devicePixelRatio || 1;
+      c.width = c.offsetWidth * dpr; if (!c.width) c.width = 300 * dpr;
+      const ctx = c.getContext('2d'); ctx.scale(dpr, dpr);
+      ctx._W = c.offsetWidth || 300; ctx._H = c.height / dpr;
+      return ctx;
+    }
+
+    // ────────────────────────── OHM'S LAW ───────────────────────────────────────
+    const ohmHist = [];
+    function simOhm() {
+      const V = +document.getElementById('ohm-V').value;
+      const R = +document.getElementById('ohm-R').value;
+      const I = (V / R).toFixed(3);
+      document.getElementById('ohm-v-lbl').textContent = V + ' V';
+      document.getElementById('ohm-r-lbl').textContent = R + ' Ω';
+      document.getElementById('ohm-I').textContent = I;
+      document.getElementById('ohm-f').textContent = `I = ${V}V ÷ ${R}Ω = ${I} A`;
+      drawCircuit(V, R, +I);
+      ohmHist.push({ V, I: +I }); if (ohmHist.length > 20) ohmHist.shift();
+      drawOhmGraph();
+    }
+    function drawCircuit(V, R, I) {
+      const ctx = getCtx('ohm-circuit'); if (!ctx) return;
+      const W = ctx._W, H = ctx._H;
+      ctx.clearRect(0, 0, W, H);
+      const alpha = Math.min(1, I / 5);
+      const col = `rgba(${Math.floor(alpha * 255)},${Math.floor((1 - alpha) * 191)},${Math.floor((1 - alpha) * 165)},1)`;
+      ctx.strokeStyle = col; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+      // rect circuit
+      ctx.beginPath(); ctx.moveTo(30, 15); ctx.lineTo(W - 30, 15); ctx.lineTo(W - 30, H - 15); ctx.lineTo(30, H - 15); ctx.closePath(); ctx.stroke();
+      // Battery left
+      ctx.strokeStyle = '#FFB300'; ctx.lineWidth = 2;
+      [[30, 30], [30, 40]].forEach(([x, y], i) => { ctx.beginPath(); ctx.moveTo(x - (i ? 8 : 12), y); ctx.lineTo(x + (i ? 8 : 12), y); ctx.stroke(); });
+      ctx.fillStyle = '#FFB300'; ctx.font = `bold 9px DM Mono,monospace`; ctx.fillText(`${V}V`, 8, H / 2);
+      // Resistor right
+      ctx.strokeStyle = col; ctx.lineWidth = 2;
+      ctx.strokeRect(W - 52, H / 2 - 12, 24, 24);
+      ctx.fillStyle = '#FFB300'; ctx.fillText(`${R}Ω`, W - 30, H / 2 + 4);
+      // Current arrow top
+      ctx.fillStyle = 'rgba(0,229,255,.7)'; ctx.font = '8px DM Mono,monospace';
+      ctx.fillText(`I=${I}A →`, W / 2 - 24, 12);
+    }
+    function drawOhmGraph() {
+      const ctx = getCtx('ohm-graph'); if (!ctx || !ohmHist.length) return;
+      const W = ctx._W, H = ctx._H, p = 28;
+      ctx.clearRect(0, 0, W, H);
+      // axes
+      ctx.strokeStyle = '#4A567A'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(p, 8); ctx.lineTo(p, H - p); ctx.lineTo(W - 8, H - p); ctx.stroke();
+      ctx.fillStyle = '#4A567A'; ctx.font = '9px DM Mono,monospace';
+      ctx.fillText('V', p - 8, H - p); ctx.fillText('I →', W - 20, H - p - 4);
+      const pts = [...ohmHist].sort((a, b) => a.V - b.V);
+      ctx.strokeStyle = '#00BFA5'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      pts.forEach((pt, i) => { const x = p + (pt.V / 24) * (W - p - 8), y = (H - p) - (pt.I / 24) * (H - p - 8); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+      ctx.stroke();
+      pts.forEach(pt => { const x = p + (pt.V / 24) * (W - p - 8), y = (H - p) - (pt.I / 24) * (H - p - 8); ctx.fillStyle = '#00BFA5'; ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill(); });
+    }
+
+    // ────────────────────────── HOOKE'S LAW ─────────────────────────────────────
+    const hookeHist = [];
+    function simHooke() {
+      const m = +document.getElementById('hk-M').value;
+      const k = +document.getElementById('hk-K').value;
+      const F = (m * 9.8 / 1000).toFixed(2);
+      const x = (m * 9.8 / 1000 / k).toFixed(3);
+      document.getElementById('hk-m-lbl').textContent = m + ' g';
+      document.getElementById('hk-k-lbl').textContent = k + ' N/m';
+      document.getElementById('hk-X').textContent = x;
+      document.getElementById('hk-F').textContent = F;
+      document.getElementById('hk-f').textContent = `x = F/k = ${F}/${k} = ${x} m`;
+      drawSpring(+x, k);
+      hookeHist.push({ x: +x, F: +F }); if (hookeHist.length > 20) hookeHist.shift();
+      drawHookeGraph();
+    }
+    function drawSpring(xExt, k) {
+      const ctx = getCtx('hk-spring'); if (!ctx) return;
+      const W = ctx._W, H = ctx._H, cx = W / 2;
+      ctx.clearRect(0, 0, W, H);
+      const springTop = 30, naturalLen = 80, extPx = Math.min(xExt * 400, 80);
+      const springBot = springTop + naturalLen + extPx;
+      // Support
+      ctx.fillStyle = '#4A567A'; ctx.fillRect(cx - 30, springTop - 10, 60, 10);
+      // Spring coils
+      const coils = 10, coilH = (springBot - springTop) / coils, coilW = 20;
+      ctx.strokeStyle = xExt > 0.15 ? '#FF6B6B' : '#00BFA5'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(cx, springTop);
+      for (let i = 0; i < coils; i++) {
+        const y1 = springTop + i * coilH, y2 = y1 + coilH / 2;
+        ctx.quadraticCurveTo(cx + (i % 2 ? coilW : -coilW), y1 + coilH / 4, cx, y2);
+        ctx.quadraticCurveTo(cx + (i % 2 ? -coilW : coilW), y2 + coilH / 4, cx, y2 + coilH / 2);
+      }
+      ctx.stroke();
+      // Bob
+      ctx.fillStyle = xExt > 0.15 ? '#FF6B6B' : '#7C6FFF';
+      ctx.beginPath(); ctx.arc(cx, springBot + 15, 14, 0, Math.PI * 2); ctx.fill();
+      // Extension label
+      if (xExt > 0.001) {
+        ctx.strokeStyle = 'rgba(255,179,0,.5)'; ctx.setLineDash([3, 3]);
+        ctx.beginPath(); ctx.moveTo(cx + 35, springTop + naturalLen); ctx.lineTo(cx + 35, springBot); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#FFB300'; ctx.font = '9px DM Mono,monospace'; ctx.fillText(`x=${(xExt * 100).toFixed(1)}cm`, cx + 38, (springTop + naturalLen + springBot) / 2);
+      }
+    }
+    function drawHookeGraph() {
+      const ctx = getCtx('hk-graph'); if (!ctx || !hookeHist.length) return;
+      const W = ctx._W, H = ctx._H, p = 28;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = '#4A567A'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(p, 8); ctx.lineTo(p, H - p); ctx.lineTo(W - 8, H - p); ctx.stroke();
+      ctx.fillStyle = '#4A567A'; ctx.font = '9px DM Mono,monospace'; ctx.fillText('x', p - 10, H - p); ctx.fillText('F →', W - 20, H - p - 4);
+      const pts = [...hookeHist].sort((a, b) => a.x - b.x);
+      const maxX = Math.max(...pts.map(p => p.x)) || .2, maxF = Math.max(...pts.map(p => p.F)) || 10;
+      ctx.strokeStyle = '#FFB300'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      pts.forEach((pt, i) => { const x = p + (pt.x / maxX) * (W - p - 8), y = (H - p) - (pt.F / maxF) * (H - p - 8); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+      ctx.stroke();
+    }
+
+    // ────────────────────────── SIMPLE PENDULUM ─────────────────────────────────
+    const pndHist = [];
+    function simPendulum() {
+      const L = +document.getElementById('pnd-L').value / 100;
+      const g = +document.getElementById('pnd-G').value / 10;
+      const T = (2 * Math.PI * Math.sqrt(L / g)).toFixed(3);
+      const f = (1 / +T).toFixed(3);
+      document.getElementById('pnd-l-lbl').textContent = L.toFixed(2) + ' m';
+      document.getElementById('pnd-g-lbl').textContent = g.toFixed(1);
+      document.getElementById('pnd-T').textContent = T;
+      document.getElementById('pnd-F').textContent = f;
+      document.getElementById('pnd-f').textContent = `T = 2π√(${L.toFixed(2)}/${g.toFixed(1)}) = ${T} s`;
+      drawPendulumDiagram(L, g, +T);
+      pndHist.push({ L, T: +T }); if (pndHist.length > 20) pndHist.shift();
+      drawPendulumGraph();
+    }
+    let pndAngle = 0, pndAnim;
+    function drawPendulumDiagram(L, g, T) {
+      if (pndAnim) cancelAnimationFrame(pndAnim);
+      const canvas = document.getElementById('pnd-canvas'); if (!canvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = canvas.offsetWidth * dpr; canvas.height = 200 * dpr;
+      const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
+      const W = canvas.offsetWidth, H = 200;
+      let t0 = null, amp = 0.25;
+      function frame(ts) {
+        if (!t0) t0 = ts;
+        const elapsed = (ts - t0) / 1000;
+        pndAngle = amp * Math.cos(2 * Math.PI / T * elapsed);
+        ctx.clearRect(0, 0, W, H);
+        const px = W / 2, py = 15, strLen = Math.min(L * 250, H - 40);
+        const bx = px + Math.sin(pndAngle) * strLen, by = py + Math.cos(pndAngle) * strLen;
+        ctx.strokeStyle = '#4A567A'; ctx.lineWidth = 4; ctx.fillRect(px - 40, py - 4, 80, 4);
+        ctx.strokeStyle = '#8A97B4'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke();
+        ctx.fillStyle = '#7C6FFF'; ctx.beginPath(); ctx.arc(bx, by, 12, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#FFB300'; ctx.font = '8px DM Mono,monospace'; ctx.fillText(`L=${L.toFixed(2)}m`, px + 4, py + strLen / 2);
+        pndAnim = requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+    function drawPendulumGraph() {
+      const ctx = getCtx('pnd-graph'); if (!ctx || !pndHist.length) return;
+      const W = ctx._W, H = ctx._H, p = 28;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = '#4A567A'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(p, 8); ctx.lineTo(p, H - p); ctx.lineTo(W - 8, H - p); ctx.stroke();
+      ctx.fillStyle = '#4A567A'; ctx.font = '9px DM Mono,monospace'; ctx.fillText('L', p - 10, H - p); ctx.fillText('T² →', W - 24, H - p - 4);
+      const pts = [...pndHist].sort((a, b) => a.L - b.L);
+      const maxL = Math.max(...pts.map(p => p.L)) || 2, maxT2 = Math.max(...pts.map(p => p.T ** 2)) || 20;
+      ctx.strokeStyle = '#B388FF'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      pts.forEach((pt, i) => { const x = p + (pt.L / maxL) * (W - p - 8), y = (H - p) - ((pt.T ** 2) / maxT2) * (H - p - 8); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+      ctx.stroke();
+    }
+
+    // ────────────────────────── REFRACTION ──────────────────────────────────────
+    function simRefraction() {
+      const th1 = +document.getElementById('ref-A').value;
+      const n2 = +document.getElementById('ref-N').value / 100;
+      const sinTh2 = Math.sin(th1 * Math.PI / 180) / n2;
+      document.getElementById('ref-a-lbl').textContent = th1 + '°';
+      document.getElementById('ref-n-lbl').textContent = n2.toFixed(2);
+      if (sinTh2 > 1) {
+        document.getElementById('ref-T').textContent = 'TIR!';
+        document.getElementById('ref-NM').textContent = '—';
+        document.getElementById('ref-f').textContent = 'Total Internal Reflection';
+      } else {
+        const th2 = (Math.asin(sinTh2) * 180 / Math.PI).toFixed(1);
+        const nMeas = (Math.sin(th1 * Math.PI / 180) / Math.sin(+th2 * Math.PI / 180)).toFixed(2);
+        document.getElementById('ref-T').textContent = th2 + '°';
+        document.getElementById('ref-NM').textContent = nMeas;
+        document.getElementById('ref-f').textContent = `1×sin(${th1}°) = ${n2.toFixed(2)}×sin(${th2}°)`;
+      }
+      drawRefraction(th1, n2);
+    }
+    function drawRefraction(th1, n2) {
+      const ctx = getCtx('ref-canvas'); if (!ctx) return;
+      const W = ctx._W, H = ctx._H;
+      ctx.clearRect(0, 0, W, H);
+      const midY = H / 2, cx = W / 2;
+      // Glass slab
+      ctx.fillStyle = 'rgba(124,111,255,.08)'; ctx.fillRect(0, midY, W, H - midY);
+      ctx.strokeStyle = 'rgba(124,111,255,.4)'; ctx.lineWidth = 1.5;
+      ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.moveTo(0, midY); ctx.lineTo(W, midY); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(124,111,255,.3)'; ctx.font = '11px DM Sans,sans-serif'; ctx.fillText('Air (n₁=1.0)', 10, midY - 8);
+      ctx.fillText('Glass (n₂=' + n2.toFixed(2) + ')', 10, midY + 18);
+      // Normal
+      ctx.strokeStyle = 'rgba(255,255,255,.15)'; ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, H); ctx.stroke(); ctx.setLineDash([]);
+      const r1 = th1 * Math.PI / 180;
+      const sinTh2 = Math.sin(r1) / n2;
+      const iLen = midY - 10;
+      const ix = cx - Math.sin(r1) * iLen, iy = 10;
+      // Incident ray
+      ctx.strokeStyle = '#FFB300'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(ix, iy); ctx.lineTo(cx, midY); ctx.stroke();
+      // Angle arc
+      ctx.strokeStyle = 'rgba(255,179,0,.4)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(cx, midY, 28, -Math.PI / 2, -(Math.PI / 2 - r1)); ctx.stroke();
+      ctx.fillStyle = '#FFB300'; ctx.font = '10px DM Mono,monospace'; ctx.fillText(th1 + '°', cx - (26 + th1 * .1), midY - 16);
+      if (sinTh2 <= 1) {
+        const r2 = Math.asin(sinTh2);
+        const rLen = H - midY - 10;
+        const rx = cx + Math.sin(r2) * rLen, ry = midY + Math.cos(r2) * rLen;
+        ctx.strokeStyle = '#00BFA5'; ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(cx, midY); ctx.lineTo(rx, ry); ctx.stroke();
+        ctx.strokeStyle = 'rgba(0,191,165,.4)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(cx, midY, 28, Math.PI / 2, Math.PI / 2 + r2); ctx.stroke();
+        ctx.fillStyle = '#00BFA5'; ctx.fillText((r2 * 180 / Math.PI).toFixed(1) + '°', cx + 8, midY + 28);
+      } else {
+        // TIR - reflect
+        ctx.strokeStyle = '#FF6B6B'; ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(cx, midY); ctx.lineTo(cx + Math.sin(r1) * iLen, iy); ctx.stroke();
+        ctx.fillStyle = '#FF6B6B'; ctx.font = '10px DM Mono'; ctx.fillText('TIR', cx + 10, midY - 20);
+      }
+    }
+
+    // ────────────────────────── TITRATION ───────────────────────────────────────
+    const titHist = [];
+    function simTitration() {
+      const vol = +document.getElementById('tit-V').value;
+      document.getElementById('tit-v-lbl').textContent = vol + ' mL';
+      let pH;
+      if (vol < 18) pH = 1 + vol * 0.28;
+      else if (vol < 20) pH = 7 + (vol - 18) * 1.5;
+      else if (vol === 20) pH = 7;
+      else if (vol <= 22) pH = 7 + (vol - 20) * 2.5;
+      else pH = Math.min(13.5, 12 + (vol - 22) * 0.1);
+      pH = Math.max(0.5, Math.min(14, pH));
+      document.getElementById('tit-pH').textContent = pH.toFixed(1);
+      const lbls = ['Strongly Acidic', 'Strongly Acidic', 'Strongly Acidic', 'Acidic', 'Moderately Acidic', 'Slightly Acidic', 'Slightly Acidic', 'Neutral', 'Slightly Basic', 'Slightly Basic', 'Basic', 'Strongly Basic', 'Strongly Basic', 'Strongly Basic', 'Strongly Basic'];
+      document.getElementById('tit-label').textContent = lbls[Math.round(pH)] || 'Basic';
+      document.getElementById('tit-marker').style.left = (pH / 14 * 100) + '%';
+      drawBeaker(vol, pH);
+      titHist.push({ vol, pH }); if (titHist.length > 41) titHist.shift();
+      drawTitGraph();
+    }
+    function drawBeaker(vol, pH) {
+      const ctx = getCtx('tit-beaker'); if (!ctx) return;
+      const W = ctx._W, H = ctx._H, bx = W / 2 - 50, bw = 100;
+      ctx.clearRect(0, 0, W, H);
+      const fillH = Math.max(20, 80 + vol * 2), fillY = H - fillH - 10;
+      // liquid colour based on pH
+      const col = pH < 5 ? 'rgba(255,80,80,.7)' : pH < 7 ? 'rgba(255,140,60,.6)' : pH < 7.5 ? 'rgba(255,150,200,.7)' : 'rgba(180,80,220,.7)';
+      ctx.fillStyle = col; ctx.fillRect(bx + 3, fillY, bw - 6, fillH);
+      // Beaker outline
+      ctx.strokeStyle = '#4A567A'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(bx, 20); ctx.lineTo(bx, H - 10); ctx.quadraticCurveTo(bx, H, bx + 10, H); ctx.lineTo(bx + bw - 10, H); ctx.quadraticCurveTo(bx + bw, H, bx + bw, H - 10); ctx.lineTo(bx + bw, 20); ctx.stroke();
+      // scale marks
+      for (let i = 1; i < 4; i++) { const y = H - 10 - i * 20; ctx.strokeStyle = '#4A567A'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(bx, y); ctx.lineTo(bx + 8, y); ctx.stroke(); }
+      // burette drop
+      ctx.fillStyle = 'var(--teal,#00BFA5)'; ctx.beginPath(); ctx.arc(W / 2, 12, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#4A567A'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(W / 2, 0); ctx.lineTo(W / 2, 8); ctx.stroke();
+    }
+    function drawTitGraph() {
+      const ctx = getCtx('tit-graph'); if (!ctx || !titHist.length) return;
+      const W = ctx._W, H = ctx._H, p = 28;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = '#4A567A'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(p, 8); ctx.lineTo(p, H - p); ctx.lineTo(W - 8, H - p); ctx.stroke();
+      ctx.fillStyle = '#4A567A'; ctx.font = '9px DM Mono,monospace'; ctx.fillText('Vol', p - 10, H - p); ctx.fillText('pH →', W - 22, H - p - 4);
+      const pts = [...titHist];
+      ctx.strokeStyle = '#00BFA5'; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      pts.forEach((pt, i) => { const x = p + (pt.vol / 40) * (W - p - 8), y = (H - p) - (pt.pH / 14) * (H - p - 8); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+      ctx.stroke();
+    }
+
+    // ────────────────────────── FLAME TEST ──────────────────────────────────────
+    const flameData = { li: { color: '#dc143c', name: 'Crimson Red', nm: 'λ ≈ 670 nm', ion: 'Li⁺' }, na: { color: '#ffcc00', name: 'Intense Yellow', nm: 'λ ≈ 589 nm', ion: 'Na⁺' }, k: { color: '#9b59b6', name: 'Lilac / Violet', nm: 'λ ≈ 768 nm', ion: 'K⁺' }, cu: { color: '#00a896', name: 'Blue-Green', nm: 'λ ≈ 510 nm', ion: 'Cu²⁺' }, ca: { color: '#cc4400', name: 'Brick Red', nm: 'λ ≈ 622 nm', ion: 'Ca²⁺' }, ba: { color: '#7ec850', name: 'Apple Green', nm: 'λ ≈ 524 nm', ion: 'Ba²⁺' } };
+    function simFlame() {
+      const key = document.getElementById('flame-salt').value;
+      const d = flameData[key];
+      document.getElementById('flame-color-name').textContent = d.name;
+      document.getElementById('flame-color-name').style.color = d.color;
+      document.getElementById('flame-wavelength').textContent = d.nm;
+      document.getElementById('flame-ion').textContent = d.ion + ' → excited electron emission';
+      drawFlame(d.color);
+    }
+    function drawFlame(col) {
+      const ctx = getCtx('flame-canvas'); if (!ctx) return;
+      const W = ctx._W, H = ctx._H, cx = W / 2;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#0a0504'; ctx.fillRect(0, 0, W, H);
+      // Bunsen burner
+      ctx.fillStyle = '#3a3a3a'; ctx.fillRect(cx - 12, H - 40, 24, 40); ctx.fillRect(cx - 20, H - 15, 40, 15);
+      // Flame layers
+      const layers = [{ r: 28, a: .25, c: 'rgba(255,140,0,.4)' }, { r: 22, a: .55, c: `${col}99` }, { r: 14, a: .85, c: col }, { r: 7, a: 1, c: 'rgba(255,255,255,.9)' }];
+      layers.forEach(l => {
+        const grd = ctx.createRadialGradient(cx, H - 55, 0, cx, H - 55, l.r);
+        grd.addColorStop(0, l.c); grd.addColorStop(1, 'transparent');
+        ctx.fillStyle = grd;
+        ctx.globalAlpha = l.a;
+        ctx.beginPath(); ctx.ellipse(cx, H - 55, l.r, l.r * 1.8, 0, 0, Math.PI * 2); ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      // Nichrome wire
+      ctx.strokeStyle = '#888'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(cx - 30, H - 80); ctx.lineTo(cx, H - 60); ctx.stroke();
+      // Sample glow
+      ctx.fillStyle = col; ctx.globalAlpha = .8;
+      ctx.beginPath(); ctx.arc(cx, H - 63, 5, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+    }
+
+    // ────────────────────────── ELECTROLYSIS ────────────────────────────────────
+    function simElectrolysis() {
+      const V = +document.getElementById('el-V').value;
+      const C = +document.getElementById('el-C').value;
+      document.getElementById('el-v-lbl').textContent = V + ' V';
+      document.getElementById('el-c-lbl').textContent = C + '%';
+      const rate = (V / 10) * (C / 20) * 12;
+      const H2 = rate.toFixed(1), O2 = (rate / 2).toFixed(1);
+      document.getElementById('el-H2').textContent = H2;
+      document.getElementById('el-O2').textContent = O2;
+      document.getElementById('el-ratio').textContent = `H₂:O₂ = ${H2}:${O2} ≈ 2:1`;
+      drawElectrolysis(V, C, rate);
+    }
+    function drawElectrolysis(V, C, rate) {
+      const ctx = getCtx('el-canvas'); if (!ctx) return;
+      const W = ctx._W, H = ctx._H;
+      ctx.clearRect(0, 0, W, H);
+      // electrolyte
+      ctx.fillStyle = 'rgba(0,100,200,.15)'; ctx.fillRect(20, 30, W - 40, H - 50);
+      // H2SO4 label
+      ctx.fillStyle = 'rgba(0,191,165,.5)'; ctx.font = '10px DM Sans'; ctx.fillText('H₂SO₄ (aq)', W / 2 - 28, H / 2 + 4);
+      // Cathode (−) left
+      const cx1 = W / 4, cx2 = 3 * W / 4, eTop = 35, eBot = H - 45;
+      ctx.fillStyle = '#7C6FFF'; ctx.fillRect(cx1 - 4, eTop, 8, eBot - eTop);
+      ctx.fillStyle = '#7C6FFF'; ctx.font = 'bold 11px DM Mono'; ctx.fillText('−', cx1 - 4, eTop - 8); ctx.fillText('H₂', cx1 - 10, eTop - 22);
+      ctx.fillStyle = '#FF6B6B'; ctx.fillRect(cx2 - 4, eTop, 8, eBot - eTop);
+      ctx.fillStyle = '#FF6B6B'; ctx.fillText('+', cx2 - 4, eTop - 8); ctx.fillText('O₂', cx2 - 10, eTop - 22);
+      // Bubbles
+      const bCount = Math.floor(rate / 2);
+      for (let i = 0; i < Math.min(bCount * 2, 16); i++) {
+        const isH2 = i < bCount * 1.4, ex = isH2 ? cx1 : cx2;
+        ctx.strokeStyle = isH2 ? 'rgba(124,111,255,.7)' : 'rgba(255,107,107,.7)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(ex + (Math.random() - 0.5) * 20, eTop + Math.random() * (eBot - eTop), 3 + Math.random() * 4, 0, Math.PI * 2); ctx.stroke();
+      }
+      // Wire top
+      ctx.strokeStyle = '#FFB300'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(cx1, eTop - 5); ctx.lineTo(cx1, 20); ctx.lineTo(W / 2 - 15, 20); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx2, eTop - 5); ctx.lineTo(cx2, 20); ctx.lineTo(W / 2 + 15, 20); ctx.stroke();
+      ctx.font = '9px DM Mono'; ctx.fillStyle = '#FFB300'; ctx.fillText(`${V}V`, W / 2 - 8, 17);
+    }
+
+    // ────────────────────────── SALT ANALYSIS ───────────────────────────────────
+    const saltData = {
+      na2co3: {
+        name: 'Na₂CO₃', cation: 'Na⁺', anion: 'CO₃²⁻', color: 'white',
+        hcl: 'Effervescence — CO₂ gas (turns lime water milky)', bacl2: 'No precipitate', agno3: 'No precipitate', nh4scn: 'No colour change', flame: 'Intense yellow → Na⁺ confirmed'
+      },
+      fecl3: {
+        name: 'FeCl₃', cation: 'Fe³⁺', anion: 'Cl⁻', color: 'brown',
+        hcl: 'No gas. Solution turns darker brown', bacl2: 'No precipitate', agno3: 'White precipitate (AgCl) — soluble in NH₃ → Cl⁻ confirmed', nh4scn: 'Blood-red colouration → Fe³⁺ confirmed', flame: 'No characteristic colour (yellow from Na contamination possible)'
+      },
+      caso4: {
+        name: 'CaSO₄', cation: 'Ca²⁺', anion: 'SO₄²⁻', color: 'white',
+        hcl: 'No reaction', bacl2: 'White precipitate (BaSO₄) — insoluble in HCl → SO₄²⁻ confirmed', agno3: 'No precipitate', nh4scn: 'No colour change', flame: 'Brick red → Ca²⁺ confirmed'
+      },
+      cuso4: {
+        name: 'CuSO₄', cation: 'Cu²⁺', anion: 'SO₄²⁻', color: 'blue',
+        hcl: 'No reaction', bacl2: 'White precipitate (BaSO₄) — insoluble in HCl → SO₄²⁻ confirmed', agno3: 'No precipitate', nh4scn: 'No colour change', flame: 'Blue-green → Cu²⁺ confirmed'
+      },
+    };
+    let saltKey = 'na2co3';
+    function simSalt() { saltKey = document.getElementById('salt-select').value; document.getElementById('salt-log').innerHTML = ''; document.getElementById('salt-obs').textContent = 'Select a reagent to test'; }
+    function saltTest(reagent, btn) {
+      document.querySelectorAll('#salt-reagents .toggle-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const d = saltData[saltKey]; if (!d) return;
+      const obs = d[reagent] || 'No observable reaction';
+      document.getElementById('salt-obs').textContent = obs;
+      const log = document.getElementById('salt-log');
+      const reagentNames = { hcl: '+ HCl', bacl2: '+ BaCl₂', agno3: '+ AgNO₃', nh4scn: '+ NH₄SCN', flame: 'Flame test' };
+      log.innerHTML = `<div>✦ ${reagentNames[reagent]}: ${obs}</div>` + log.innerHTML;
+    }
+
+    // ────────────────────────── PHOTOSYNTHESIS ──────────────────────────────────
+    function simPhoto() {
+      const L = +document.getElementById('ph-L').value;
+      const C = +document.getElementById('ph-C').value;
+      const Tv = +document.getElementById('ph-T').value;
+      document.getElementById('ph-l-lbl').textContent = L + '%';
+      document.getElementById('ph-c-lbl').textContent = (C * 0.01).toFixed(2) + '%';
+      document.getElementById('ph-t-lbl').textContent = Tv + '°C';
+      const lf = L / 100, cf = C / 10, tf = Tv < 10 ? .1 : Tv < 20 ? .5 : Tv < 35 ? 1 : Tv < 42 ? .6 : .2;
+      const lim = Math.min(lf, cf, tf);
+      const rate = Math.round(lim * 120);
+      document.getElementById('ph-rate').textContent = rate;
+      const notes = rate === 0 ? '❌ No photosynthesis' : rate < 30 ? '⚠ Low — check limiting factor' : rate < 80 ? '✓ Moderate rate' : '🌟 Maximum rate!';
+      document.getElementById('ph-note').textContent = notes;
+      document.getElementById('lf-l').textContent = Math.round(lf * 100) + '%';
+      document.getElementById('lf-c').textContent = Math.round(cf * 100) + '%';
+      document.getElementById('lf-t').textContent = Math.round(tf * 100) + '%';
+      document.getElementById('lf-l-bar').style.width = (lf * 100) + '%';
+      document.getElementById('lf-c-bar').style.width = (cf * 100) + '%';
+      document.getElementById('lf-t-bar').style.width = (tf * 100) + '%';
+      drawPlant(L, rate);
+    }
+    function drawPlant(light, bubbles) {
+      const ctx = getCtx('ph-plant'); if (!ctx) return;
+      const W = ctx._W, H = ctx._H;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = 'rgba(0,100,200,.1)'; ctx.fillRect(0, H * .6, W, H * .4);
+      ctx.strokeStyle = '#4CAF7D'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(W / 2, H); ctx.quadraticCurveTo(W / 2 - 5, H * .7, W / 2, H * .4); ctx.stroke();
+      [[W / 2, H * .75, -1], [W / 2, H * .58, 1]].forEach(([sx, sy, dir]) => {
+        ctx.fillStyle = 'rgba(76,175,125,.65)'; ctx.beginPath(); ctx.ellipse(sx + dir * 18, sy, 18, 7, dir * .4, 0, Math.PI * 2); ctx.fill();
+      });
+      const bc = Math.min(bubbles / 8, 14);
+      for (let i = 0; i < bc; i++) { ctx.strokeStyle = 'rgba(0,191,165,.7)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(W / 2 - 15 + Math.random() * 30, H * .3 + Math.random() * 15, 2 + Math.random() * 3, 0, Math.PI * 2); ctx.stroke(); }
+      const alpha = light / 250;
+      ctx.strokeStyle = `rgba(255,179,0,${alpha})`; ctx.lineWidth = 1.5; ctx.setLineDash([4, 4]);
+      for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.moveTo(20 + i * W / 4.5, 0); ctx.lineTo(25 + i * W / 4.5, H * .35); ctx.stroke(); }
+      ctx.setLineDash([]);
+    }
+
+    // ────────────────────────── OSMOSIS ─────────────────────────────────────────
+    const osHist = [];
+    function simOsmosis() {
+      const ext = +document.getElementById('os-C').value;
+      const Int = 10;
+      document.getElementById('os-c-lbl').textContent = ext + '%';
+      const diff = Int - ext;
+      const massChange = diff * 2.5;
+      const mc = massChange > 0 ? '+' + massChange.toFixed(1) : massChange.toFixed(1);
+      document.getElementById('os-mass').textContent = mc + '%';
+      document.getElementById('os-mass').style.color = massChange > 0 ? 'var(--teal)' : massChange < 0 ? 'var(--coral)' : 'var(--amber)';
+      const state = ext < Int ? 'Turgid (water entering)' : ext > Int ? 'Plasmolysed (water leaving)' : 'Isotonic (no net flow)';
+      document.getElementById('os-state').textContent = state;
+      document.getElementById('os-note').textContent = ext < Int ? `External ${ext}% < Internal ${Int}% → water enters` : ext > Int ? `External ${ext}% > Internal ${Int}% → water exits` : `Equal concentrations → isotonic`;
+      drawOsmosisCell(ext, Int);
+      osHist.push({ ext, mc: +massChange }); if (osHist.length > 21) osHist.shift();
+      drawOsmosisGraph();
+    }
+    function drawOsmosisCell(ext, Int) {
+      const ctx = getCtx('os-canvas'); if (!ctx) return;
+      const W = ctx._W, H = ctx._H, cx = W / 2, cy = H / 2;
+      ctx.clearRect(0, 0, W, H);
+      const diff = Int - ext, sz = 22 + Math.min(15, Math.max(-12, diff * 1.2));
+      // Cell wall
+      ctx.strokeStyle = '#4CAF7D'; ctx.lineWidth = 3; ctx.setLineDash([]);
+      ctx.beginPath(); ctx.roundRect(cx - sz - 4, cy - sz - 4, sz * 2 + 8, sz * 2 + 8, 8); ctx.stroke();
+      // Cell membrane
+      const plasmolysed = ext > Int;
+      ctx.strokeStyle = 'rgba(76,175,125,.5)'; ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      if (plasmolysed) { const ms = sz * .75; ctx.roundRect(cx - ms, cy - ms, ms * 2, ms * 2, 6); }
+      else ctx.roundRect(cx - sz, cy - sz, sz * 2, sz * 2, 6);
+      ctx.stroke();
+      // Vacuole
+      ctx.fillStyle = `rgba(0,150,200,${.3 + diff * .02})`;
+      ctx.beginPath(); ctx.ellipse(cx, cy, sz * .6, sz * .5, 0, 0, Math.PI * 2); ctx.fill();
+      // Arrows
+      const arrowLen = 20, nc = ext < Int ? '#00BFA5' : '#FF6B6B';
+      ctx.fillStyle = nc; ctx.font = '16px sans-serif';
+      if (ext !== Int) { const dirs = ext < Int ? [[-1, 0], [1, 0], [0, -1], [0, 1]] : [[1, 0], [-1, 0], [0, 1], [0, -1]]; dirs.forEach(([dx, dy]) => { ctx.fillText(ext < Int ? '→' : '←', cx + dx * (sz + 15) - 6, cy + dy * (sz + 15) + 6); }); }
+      // Concentration labels
+      ctx.fillStyle = 'var(--text2,#8A97B4)'; ctx.font = '9px DM Mono,monospace';
+      ctx.fillText(`Inside: ${Int}%`, cx - 24, H - 8);
+      ctx.fillText(`Outside: ${ext}%`, cx + 30, H - 8);
+    }
+    function drawOsmosisGraph() {
+      const ctx = getCtx('os-graph'); if (!ctx || !osHist.length) return;
+      const W = ctx._W, H = ctx._H, p = 28;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = '#4A567A'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(p, 8); ctx.lineTo(p, H - p); ctx.lineTo(W - 8, H - p); ctx.stroke();
+      // zero line
+      const zeroY = (H - p) - (0 / 50 + .5) * (H - p - 8);
+      ctx.strokeStyle = 'rgba(255,179,0,.3)'; ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(p, H / 2); ctx.lineTo(W - 8, H / 2); ctx.stroke(); ctx.setLineDash([]);
+      const pts = [...osHist].sort((a, b) => a.ext - b.ext);
+      ctx.strokeStyle = '#4CAF7D'; ctx.lineWidth = 2;
+      ctx.beginPath();
+      pts.forEach((pt, i) => { const x = p + (pt.ext / 20) * (W - p - 8), y = (H / 2) - pt.mc * 2; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+      ctx.stroke();
+    }
+
+    // ────────────────────────── MITOSIS ─────────────────────────────────────────
+    const mitPhaseData = {
+      prophase: { name: 'Prophase', desc: 'Chromatin condenses into chromosomes', events: '• Chromatin condenses\n• Spindle fibres begin forming\n• Nuclear envelope breaks down' },
+      metaphase: { name: 'Metaphase', desc: 'Chromosomes align at cell equator (metaphase plate)', events: '• Chromosomes maximally condensed\n• Spindle fibres attach to centromeres\n• Chromosomes align at equator' },
+      anaphase: { name: 'Anaphase', desc: 'Sister chromatids pulled to opposite poles', events: '• Centromeres split\n• Sister chromatids separate\n• Cell elongates' },
+      telophase: { name: 'Telophase', desc: 'Nuclear envelopes reform; cytokinesis begins', events: '• Nuclear envelopes reform\n• Chromosomes decondense\n• Cell plate forms (cytokinesis)' },
+    };
+    function simMitosis(phase, btn) {
+      if (btn) { document.querySelectorAll('.toggle-row .toggle-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+      const d = mitPhaseData[phase];
+      document.getElementById('mit-phase').textContent = d.name;
+      document.getElementById('mit-desc').textContent = d.desc;
+      document.getElementById('mit-events').innerHTML = d.events.replace(/\n/g, '<br/>');
+      drawMitosis(phase);
+    }
+    function drawMitosis(phase) {
+      const ctx = getCtx('mit-canvas'); if (!ctx) return;
+      const W = ctx._W, H = ctx._H, cx = W / 2, cy = H / 2;
+      ctx.clearRect(0, 0, W, H);
+      // Cell outline
+      const isAna = phase === 'anaphase', isTelo = phase === 'telophase';
+      ctx.strokeStyle = 'rgba(76,175,125,.6)'; ctx.lineWidth = 2.5;
+      if (isAna || isTelo) {
+        ctx.beginPath(); ctx.ellipse(cx, cy, W * .3, H * .4, 0, 0, Math.PI * 2); ctx.stroke();
+      } else {
+        ctx.beginPath(); ctx.ellipse(cx, cy, W * .35, H * .42, 0, 0, Math.PI * 2); ctx.stroke();
+      }
+      const chrColors = ['#7C6FFF', '#FF6B6B', '#00BFA5', '#FFB300'];
+      if (phase === 'prophase') {
+        chrColors.forEach((c, i) => { const a = i * Math.PI / 2; ctx.fillStyle = c; ctx.beginPath(); ctx.roundRect(cx + Math.cos(a) * 30 - 6, cy + Math.sin(a) * 25 - 12, 12, 24, 6); ctx.fill(); });
+      } else if (phase === 'metaphase') {
+        chrColors.forEach((c, i) => { const x = cx + (i - 1.5) * 28; ctx.fillStyle = c; ctx.beginPath(); ctx.roundRect(x - 6, cy - 14, 12, 28, 6); ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,.2)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, cy - 14); ctx.lineTo(x, cy + 14); ctx.stroke(); });
+        ctx.strokeStyle = 'rgba(255,255,255,.1)'; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(20, cy); ctx.lineTo(W - 20, cy); ctx.stroke(); ctx.setLineDash([]);
+      } else if (phase === 'anaphase') {
+        [-1, 1].forEach(dir => { chrColors.forEach((c, i) => { const x = cx + (i - 1.5) * 22; ctx.fillStyle = c; ctx.beginPath(); ctx.roundRect(x - 5, cy + dir * 30 - 9, 10, 18, 5); ctx.fill(); }); });
+        ctx.strokeStyle = 'rgba(255,255,255,.15)'; ctx.lineWidth = 1;
+        chrColors.forEach((c, i) => { const x = cx + (i - 1.5) * 22; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x + 5, cy - 30); ctx.moveTo(cx, cy); ctx.lineTo(x + 5, cy + 30); ctx.stroke(); });
+      } else {
+        [-1, 1].forEach(dir => { ctx.strokeStyle = 'rgba(76,175,125,.4)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.ellipse(cx, cy + dir * 38, W * .2, H * .18, 0, 0, Math.PI * 2); ctx.stroke(); chrColors.forEach((c, i) => { const a = i * Math.PI / 2; ctx.fillStyle = c + '88'; ctx.beginPath(); ctx.roundRect(cx + Math.cos(a) * 18 - 4, cy + dir * 38 + Math.sin(a) * 14 - 7, 8, 14, 4); ctx.fill(); }); });
+      }
+    }
+
+    // ────────────────────────── DNA EXTRACTION ──────────────────────────────────
+    const dnaStepData = [
+      { name: 'Lysis (Mash)', desc: 'Breaking open cells', detail: '• Mash banana + salt + washing-up liquid\n• SDS (detergent) lyses cell & nuclear membranes\n• DNA released into solution' },
+      { name: 'Filtration', desc: 'Removing cell debris', detail: '• Pour through coffee filter / cheesecloth\n• Large cell debris removed\n• Clear filtrate containing DNA collected' },
+      { name: 'Ethanol Layer', desc: 'DNA precipitation interface', detail: '• Slowly pour cold ethanol over filtrate\n• DNA is insoluble in ethanol\n• White threads form at the interface' },
+      { name: 'DNA Spooling', desc: 'Collecting DNA strands', detail: '• Insert glass rod at ethanol-water interface\n• Rotate slowly — DNA winds around rod\n• Visible white fibrous DNA collected' },
+    ];
+    function simDNA(step, btn) {
+      if (btn) { document.querySelectorAll('#dna-canvas').length; document.querySelectorAll('[onclick^="simDNA"]').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+      const d = dnaStepData[step];
+      document.getElementById('dna-step-name').textContent = d.name;
+      document.getElementById('dna-step-desc').textContent = d.desc;
+      document.getElementById('dna-detail').innerHTML = d.detail.replace(/\n/g, '<br/>');
+      drawDNA(step);
+    }
+    function drawDNA(step) {
+      const ctx = getCtx('dna-canvas'); if (!ctx) return;
+      const W = ctx._W, H = ctx._H, cx = W / 2;
+      ctx.clearRect(0, 0, W, H);
+      if (step === 0) {
+        // Mash — banana + flask with lysed cells
+        ctx.fillStyle = '#7a5c00'; for (let i = 0; i < 8; i++) ctx.fillRect(20 + i * 28, H - 50, 22, 44);
+        ctx.fillStyle = 'rgba(255,180,0,.6)'; ctx.beginPath(); ctx.ellipse(cx, H / 2, W * .3, H * .2, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(76,175,125,.4)'; for (let i = 0; i < 20; i++) { ctx.beginPath(); ctx.arc(cx + (Math.random() - .5) * W * .5, H / 2 + (Math.random() - .5) * H * .35, 3 + Math.random() * 5, 0, Math.PI * 2); ctx.fill(); }
+        ctx.fillStyle = 'var(--text2)'; ctx.font = '10px DM Sans'; ctx.fillText('+ Detergent + Salt', cx - 44, 30);
+      } else if (step === 1) {
+        // Filter
+        ctx.fillStyle = 'rgba(200,180,0,.15)'; ctx.fillRect(W * .2, 0, W * .6, H * .4);
+        ctx.strokeStyle = '#8A97B4'; ctx.lineWidth = 1.5;
+        for (let i = 0; i < 6; i++) { ctx.beginPath(); ctx.moveTo(W * .2, i * 10); ctx.lineTo(W * .8, i * 10); ctx.stroke(); }
+        ctx.fillStyle = 'rgba(0,100,200,.3)'; ctx.beginPath(); ctx.ellipse(cx, H * .7, W * .25, H * .2, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'var(--teal)'; for (let i = 0; i < 8; i++) { ctx.beginPath(); ctx.arc(W * .2 + Math.random() * W * .6, H * .4 + H * .3 * Math.random(), 2, 0, Math.PI * 2); ctx.fill(); }
+        ctx.fillStyle = 'var(--text2)'; ctx.font = '9px DM Sans'; ctx.fillText('DNA in filtrate', cx - 32, H * .95);
+      } else if (step === 2) {
+        // Ethanol layer
+        ctx.fillStyle = 'rgba(0,80,160,.25)'; ctx.fillRect(W * .15, H * .45, W * .7, H * .5);
+        ctx.fillStyle = 'rgba(180,220,255,.2)'; ctx.fillRect(W * .15, H * .15, W * .7, H * .3);
+        ctx.strokeStyle = 'rgba(255,255,255,.4)'; ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(W * .15, H * .45); ctx.lineTo(W * .85, H * .45); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = 'rgba(255,255,255,.7)';
+        for (let i = 0; i < 12; i++) { ctx.beginPath(); ctx.arc(W * .15 + Math.random() * W * .7, H * .4 + Math.random() * H * .12, 1.5 + Math.random() * 3, 0, Math.PI * 2); ctx.fill(); }
+        ctx.fillStyle = 'var(--text2)'; ctx.font = '9px DM Sans'; ctx.fillText('Ethanol', cx - 20, H * .35); ctx.fillText('Aqueous filtrate', cx - 36, H * .9);
+        ctx.fillText('DNA threads ↑', cx - 30, H * .43);
+      } else {
+        // Spool
+        ctx.strokeStyle = '#8A97B4'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(cx, 10); ctx.lineTo(cx, H - 30); ctx.stroke();
+        ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.lineWidth = 1.5;
+        for (let i = 0; i < 14; i++) { const y = 40 + i * 13, amp = 15 + i * 1.5, phase = i * .8; ctx.beginPath(); ctx.moveTo(cx, y); for (let t = 0; t <= 1; t += .05) ctx.lineTo(cx + Math.sin(t * Math.PI * 2 + phase) * amp, y + t * 8); ctx.stroke(); }
+        ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.font = 'bold 10px DM Sans'; ctx.fillText('↩ DNA', cx + 18, H / 2);
+      }
+    }
+
+    // ────────────────────────── DERIVATIVES ─────────────────────────────────────
+    const fnDefs = { sq: { f: x => x * x, df: x => 2 * x, name: "f'(x) = 2x" }, cu: { f: x => x * x * x, df: x => 3 * x * x, name: "f'(x) = 3x²" }, sin: { f: x => Math.sin(x), df: x => Math.cos(x), name: "f'(x) = cos(x)" }, cos: { f: x => Math.cos(x), df: x => -Math.sin(x), name: "f'(x) = -sin(x)" }, sqrt: { f: x => x >= 0 ? Math.sqrt(x) : NaN, df: x => x > 0 ? 1 / (2 * Math.sqrt(x)) : NaN, name: "f'(x) = 1/(2√x)" }, abs: { f: x => Math.abs(x), df: x => x > 0 ? 1 : x < 0 ? -1 : NaN, name: "f'(x) = sign(x)" } };
+    function simDerivative() {
+      const key = document.getElementById('deriv-fn').value;
+      const x = +document.getElementById('deriv-X').value / 10;
+      const fn = fnDefs[key];
+      const deriv = fn.df(x);
+      document.getElementById('deriv-x-lbl').textContent = `x = ${x.toFixed(1)}`;
+      document.getElementById('deriv-val').textContent = isNaN(deriv) ? 'Undefined' : deriv.toFixed(3);
+      document.getElementById('deriv-formula').textContent = `${fn.name} → f'(${x.toFixed(1)}) = ${isNaN(deriv) ? 'undefined' : deriv.toFixed(3)}`;
+      drawDerivativeGraph(key, x);
+    }
+    function drawDerivativeGraph(key, x0) {
+      const ctx = getCtx('deriv-canvas'); if (!ctx) return;
+      const W = ctx._W, H = ctx._H, pad = 30;
+      ctx.clearRect(0, 0, W, H);
+      const fn = fnDefs[key];
+      // Map: x domain [-3,3], y domain [-4,4]
+      const xMin = -3, xMax = 3, yMin = -4, yMax = 4;
+      const toX = v => pad + (v - xMin) / (xMax - xMin) * (W - 2 * pad);
+      const toY = v => pad + (yMax - v) / (yMax - yMin) * (H - 2 * pad);
+      // Axes
+      ctx.strokeStyle = '#4A567A'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(toX(xMin), toY(0)); ctx.lineTo(toX(xMax), toY(0)); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(toX(0), toY(yMin)); ctx.lineTo(toX(0), toY(yMax)); ctx.stroke();
+      // Curve
+      ctx.strokeStyle = '#00BFA5'; ctx.lineWidth = 2.5; ctx.lineJoin = 'round';
+      ctx.beginPath(); let started = false;
+      for (let xi = xMin; xi <= xMax; xi += 0.04) {
+        const yi = fn.f(xi);
+        if (isNaN(yi) || yi < yMin - 1 || yi > yMax + 1) { started = false; continue; }
+        started ? ctx.lineTo(toX(xi), toY(yi)) : ctx.moveTo(toX(xi), toY(yi));
+        started = true;
+      }
+      ctx.stroke();
+      // Tangent
+      const y0 = fn.f(x0), m = fn.df(x0);
+      if (!isNaN(y0) && !isNaN(m)) {
+        ctx.strokeStyle = '#FFB300'; ctx.lineWidth = 1.8; ctx.setLineDash([5, 4]);
+        const tx1 = xMin, ty1 = y0 + m * (xMin - x0);
+        const tx2 = xMax, ty2 = y0 + m * (xMax - x0);
+        ctx.beginPath(); ctx.moveTo(toX(tx1), toY(ty1)); ctx.lineTo(toX(tx2), toY(ty2)); ctx.stroke();
+        ctx.setLineDash([]);
+        // Point
+        ctx.fillStyle = '#FF6B6B'; ctx.beginPath(); ctx.arc(toX(x0), toY(y0), 5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#FFB300'; ctx.font = '9px DM Mono'; ctx.fillText(`(${x0.toFixed(1)}, ${y0.toFixed(2)})`, toX(x0) + 6, toY(y0) - 6);
+      }
+    }
+
+    // ────────────────────────── LOGIC GATES ─────────────────────────────────────
+    let gateType = 'AND', gateInputs = { A: 0, B: 0 };
+    const gateExprs = { AND: 'Y = A·B', OR: 'Y = A+B', NOT: 'Y = Ā', NAND: 'Y = NOT(A·B)', NOR: 'Y = NOT(A+B)', XOR: 'Y = A⊕B' };
+    function setGate(type, btn) {
+      gateType = type;
+      if (btn) { document.querySelectorAll('#gate-types .toggle-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+      document.getElementById('gate-expr').textContent = gateExprs[type];
+      updateGate();
+    }
+    function toggleInput(inp) {
+      gateInputs[inp] ^= 1;
+      const btn = document.getElementById('btn-' + inp);
+      btn.textContent = gateInputs[inp];
+      btn.style.color = gateInputs[inp] ? 'var(--green)' : 'var(--coral)';
+      btn.style.borderColor = gateInputs[inp] ? 'var(--green)' : 'var(--coral)';
+      updateGate();
+    }
+    function computeGate(A, B, type) {
+      switch (type) { case 'AND': return A & B; case 'OR': return A | B; case 'NOT': return A ? 0 : 1; case 'NAND': return (A & B) ? 0 : 1; case 'NOR': return (A | B) ? 0 : 1; case 'XOR': return A ^ B; }
+    }
+    function updateGate() {
+      const { A, B } = gateInputs;
+      const Y = computeGate(A, B, gateType);
+      const outEl = document.getElementById('gate-out');
+      outEl.textContent = Y;
+      outEl.style.color = Y ? 'var(--green)' : 'var(--coral)';
+      outEl.style.borderColor = Y ? 'var(--green)' : 'var(--border2)';
+      // Truth table
+      const tbody = document.getElementById('truth-body');
+      const isNot = gateType === 'NOT';
+      const rows = isNot ? [[0, null, computeGate(0, 0, gateType)], [1, null, computeGate(1, 0, gateType)]] : [[0, 0], [0, 1], [1, 0], [1, 1]].map(([a, b]) => [a, b, computeGate(a, b, gateType)]);
+      tbody.innerHTML = rows.map(([a, b, y]) => {
+        const cur = a === A && (isNot || b === B);
+        return `<tr style="${cur ? 'background:rgba(0,191,165,.12)' : ''};color:${cur ? 'var(--text)' : 'var(--text3)'}">
+      <td style="padding:.3rem .5rem;text-align:center;color:${a ? 'var(--green)' : 'var(--coral)'}">${a}</td>
+      ${isNot ? '' : `<td style="padding:.3rem .5rem;text-align:center;color:${b ? 'var(--green)' : 'var(--coral)'}">${b}</td>`}
+      <td style="padding:.3rem .5rem;text-align:center;font-weight:700;color:${y ? 'var(--green)' : 'var(--coral)'}">${y}</td></tr>`;
+      }).join('');
+      drawGate(A, B, Y, gateType);
+    }
+    function drawGate(A, B, Y, type) {
+      const ctx = getCtx('gate-canvas'); if (!ctx) return;
+      const W = ctx._W, H = ctx._H, cx = W / 2, cy = H / 2;
+      ctx.clearRect(0, 0, W, H);
+      const isNot = type === 'NOT';
+      // Gate body
+      ctx.fillStyle = 'var(--surface2,#1E2640)'; ctx.strokeStyle = '#7C6FFF'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.roundRect(cx - 30, cy - 25, 60, 50, 8); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#E8EEF8'; ctx.font = 'bold 11px DM Mono,monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(type, cx, cy); ctx.textAlign = 'start';
+      // Wires
+      const wCol = v => v ? '#4CAF7D' : '#4A567A';
+      ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+      if (!isNot) {
+        ctx.strokeStyle = wCol(A); ctx.beginPath(); ctx.moveTo(20, cy - 14); ctx.lineTo(cx - 30, cy - 14); ctx.stroke();
+        ctx.strokeStyle = wCol(B); ctx.beginPath(); ctx.moveTo(20, cy + 14); ctx.lineTo(cx - 30, cy + 14); ctx.stroke();
+        ctx.fillStyle = A ? '#4CAF7D' : 'var(--coral)'; ctx.font = '9px DM Mono'; ctx.fillText('A=' + A, 4, cy - 10);
+        ctx.fillStyle = B ? '#4CAF7D' : 'var(--coral)'; ctx.fillText('B=' + B, 4, cy + 18);
+      } else {
+        ctx.strokeStyle = wCol(A); ctx.beginPath(); ctx.moveTo(20, cy); ctx.lineTo(cx - 30, cy); ctx.stroke();
+        ctx.fillStyle = A ? '#4CAF7D' : 'var(--coral)'; ctx.font = '9px DM Mono'; ctx.fillText('A=' + A, 4, cy + 4);
+      }
+      ctx.strokeStyle = wCol(Y); ctx.beginPath(); ctx.moveTo(cx + 30, cy); ctx.lineTo(W - 20, cy); ctx.stroke();
+      ctx.fillStyle = Y ? '#4CAF7D' : 'var(--coral)'; ctx.font = 'bold 9px DM Mono'; ctx.fillText('Y=' + Y, W - 18, cy + 4);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       INIT
+    ═══════════════════════════════════════════════════════════════════════════ */
+    loadStoredAuth();
+    goPage('home');
+    window.addEventListener('resize', () => {
+      Object.keys(simInited).forEach(key => {
+        if (simInited[key]) initSim(key);
+      });
+    });
+  </script>
+</body>
+
+</html>
